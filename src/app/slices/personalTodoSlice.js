@@ -23,8 +23,8 @@ const dataTableSlice = createSlice({
     txtSearch: "",
     currentPage: 0,
     itemsPerPage: 5,
-    columnSort: "",
-    sortDirection: "asc",
+    columnSort: "created_at",
+    sortDirection: "desc",
     selectedRows: [],
     processType: null, // e.g., 'delete', 'mark as done' and 'mark as pending'.
   },

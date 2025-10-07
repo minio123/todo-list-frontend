@@ -1,165 +1,36 @@
+import api from "./api";
+
 // src/app/api/personalTodo.js
 // Simulated API services for personal todo tasks
 
 // Simulate an API call to fetch tasks
 const fetchTasks = async (params) => {
-  const testData = [
-    {
-      todoId: "TAUG25-001",
-      status: "Overdue",
-      todoName: "Test",
-      dueDate: "August 18, 2025",
-    },
-    {
-      todoId: "TAUG25-002",
-      status: "Done",
-      todoName: "Test 1",
-      dueDate: "July 26, 2025",
-    },
-    {
-      todoId: "TAUG25-003",
-      status: "Done",
-      todoName: "Test 2",
-      dueDate: "July 26, 2025",
-    },
-    {
-      todoId: "TAUG25-004",
-      status: "Done",
-      todoName: "Test 3",
-      dueDate: "July 26, 2025",
-    },
-    {
-      todoId: "TAUG25-005",
-      status: "Done",
-      todoName: "Test 4",
-      dueDate: "July 16, 2025",
-    },
-    // {
-    //   todoId: "TAUG25-006",
-    //   status: "Pending",
-    //   todoName: "Test 5",
-    //   dueDate: "August 15, 2025",
-    // },
-    // {
-    //   todoId: "TAUG25-007",
-    //   status: "Pending",
-    //   todoName: "Test 6",
-    //   dueDate: "August 12, 2025",
-    // },
-    // {
-    //   todoId: "TAUG25-008",
-    //   status: "Overdue",
-    //   todoName: "Test 6",
-    //   dueDate: "July 26, 2025",
-    // },
-    // {
-    //   todoId: "TAUG25-009",
-    //   status: "Overdue",
-    //   todoName: "Test 8",
-    //   dueDate: "July 26, 2025",
-    // },
-    // {
-    //   todoId: "TAUG25-010",
-    //   status: "Done",
-    //   todoName: "Test",
-    //   dueDate: "July 26, 2025",
-    // },
-    // {
-    //   todoId: "TAUG25-011",
-    //   status: "Done",
-    //   todoName: "Test 1",
-    //   dueDate: "July 26, 2025",
-    // },
-    // {
-    //   todoId: "TAUG25-012",
-    //   status: "Done",
-    //   todoName: "Test 2",
-    //   dueDate: "July 26, 2025",
-    // },
-    // {
-    //   todoId: "TAUG25-013",
-    //   status: "Done",
-    //   todoName: "Test 3",
-    //   dueDate: "July 26, 2025",
-    // },
-    // {
-    //   todoId: "TAUG25-014",
-    //   status: "Done",
-    //   todoName: "Test 4",
-    //   dueDate: "July 16, 2025",
-    // },
-    // {
-    //   todoId: "TAUG25-015",
-    //   status: "Pending",
-    //   todoName: "Test 5",
-    //   dueDate: "August 15, 2025",
-    // },
-    // {
-    //   todoId: "TAUG25-016",
-    //   status: "Done",
-    //   todoName: "Test 1",
-    //   dueDate: "July 26, 2025",
-    // },
-    // {
-    //   todoId: "TAUG25-017",
-    //   status: "Done",
-    //   todoName: "Test 2",
-    //   dueDate: "July 26, 2025",
-    // },
-    // {
-    //   todoId: "TAUG25-018",
-    //   status: "Done",
-    //   todoName: "Test 3",
-    //   dueDate: "July 26, 2025",
-    // },
-    // {
-    //   todoId: "TAUG25-019",
-    //   status: "Done",
-    //   todoName: "Test 4",
-    //   dueDate: "July 16, 2025",
-    // },
-    // {
-    //   todoId: "TAUG25-020",
-    //   status: "Pending",
-    //   todoName: "Test 5",
-    //   dueDate: "August 15, 2025",
-    // },
-    // {
-    //   todoId: "TAUG25-021",
-    //   status: "Pending",
-    //   todoName: "Test 5",
-    //   dueDate: "August 15, 2025",
-    // },
-    // {
-    //   todoId: "TAUG25-022",
-    //   status: "Pending",
-    //   todoName: "Test 5",
-    //   dueDate: "August 15, 2025",
-    // },
-    // {
-    //   todoId: "TAUG25-023",
-    //   status: "Pending",
-    //   todoName: "Test 5",
-    //   dueDate: "August 15, 2025",
-    // },
-    // {
-    //   todoId: "TAUG25-024",
-    //   status: "Pending",
-    //   todoName: "Test 5",
-    //   dueDate: "August 15, 2025",
-    // },
-    // {
-    //   todoId: "TAUG25-025",
-    //   status: "Pending",
-    //   todoName: "Test 5",
-    //   dueDate: "August 15, 2025",
-    // },
-  ];
+  let url_params = `?search=${params.search}&page=${params.page}&sort_by=${params.columnSort}&sort=${params.sortDirection}&limit=${params.itemsPerPage}&category=personal`;
+  if (params.search == "") {
+    url_params = `?page=${params.page}&sort_by=${params.columnSort}&sort=${params.sortDirection}&limit=${params.itemsPerPage}&category=personal`;
+  }
 
-  const response = testData.filter((todo) => {
+  const api_response = await api
+    .get(`/todo${url_params}`, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => {
+      return error;
+    });
+
+  const data = api_response.data;
+
+  console.log(data);
+
+  const response = data.filter((todo) => {
     if (
-      todo.todoId.includes(params.search) ||
-      todo.todoName.includes(params.search)
+      todo.todo_id.includes(params.search) ||
+      todo.todo_name.includes(params.search)
     ) {
       return todo;
     }
@@ -196,12 +67,18 @@ const deleteTasks = async (taskIds) => {
 
 // Simulate an API call to mark tasks as done
 const markTasksAsDone = async (taskIds) => {
-  // Simulate an API call to mark tasks as done
+  if (taskIds.length == 0) {
+    return false;
+  }
+
   return taskIds; // Return the IDs of updated tasks for simplicity
 };
 
 // Simulate an API call to mark tasks as pending
 const markTasksAsPending = async (taskIds) => {
+  if (taskIds.length == 0) {
+    return false;
+  }
   return taskIds; // Return the IDs of updated tasks for simplicity
 };
 

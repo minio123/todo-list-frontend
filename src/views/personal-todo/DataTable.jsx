@@ -62,9 +62,9 @@ const DataTable = () => {
 
   // Columns for the table
   const columns = [
-    { field: "todoId", headerName: "To-do ID", width: 120 },
+    { field: "todo_id", headerName: "To-do ID", width: 120 },
     {
-      field: "todoName",
+      field: "todo_name",
       headerName: "To-do name",
     },
     {
@@ -75,7 +75,7 @@ const DataTable = () => {
       },
     },
     {
-      field: "dueDate",
+      field: "deadline",
       headerName: "Due Date",
     },
     {
@@ -83,22 +83,22 @@ const DataTable = () => {
     },
   ];
 
-  // Function to handle select all checkbox
+  // Function to handle select all checkzbox
   // This will toggle the selection of all rows
   const handleSelectAll = () => {
     setCheckAll(!checkAll); // Toggle the checkAll state
     if (checkAll && selectedRows.length > 0) {
       dispatch(setId([]));
     } else {
-      dispatch(setId(rows.map((row) => row.todoId)));
+      dispatch(setId(rows.map((row) => row.todo_id)));
     }
   };
 
-  const handleRowSelect = (todoId) => {
-    if (selectedRows.includes(todoId)) {
-      dispatch(setId(selectedRows.filter((id) => id !== todoId)));
+  const handleRowSelect = (todo_id) => {
+    if (selectedRows.includes(todo_id)) {
+      dispatch(setId(selectedRows.filter((id) => id !== todo_id)));
     } else {
-      dispatch(setId([...selectedRows, todoId]));
+      dispatch(setId([...selectedRows, todo_id]));
     }
   };
   // useEffect to fetch data when dependencies change
@@ -163,12 +163,12 @@ const DataTable = () => {
           <TableBody>
             {rows.length > 0 ? (
               rows.map((row, i) => (
-                <TableRow key={row.todoId} hover>
+                <TableRow key={row.todo_id} hover>
                   <TableCell padding="checkbox">
                     <Checkbox
                       color="primary"
-                      checked={selectedRows.includes(row.todoId)}
-                      onChange={() => handleRowSelect(row.todoId)}
+                      checked={selectedRows.includes(row.todo_id)}
+                      onChange={() => handleRowSelect(row.todo_id)}
                     />
                   </TableCell>
                   {columns.map((column) => {
@@ -192,6 +192,22 @@ const DataTable = () => {
                                 backgroundColor: rowColors[row.status],
                               }}
                             />
+                          </TableCell>
+                        );
+                      } else if (column.field === "deadline") {
+                        return (
+                          <TableCell key={column.field}>
+                            <Typography
+                              color={
+                                row.status === "Overdue" ? "error" : "inherit"
+                              }
+                            >
+                              {row[column.field]
+                                .split("T")[0]
+                                .split("-")
+                                .reverse()
+                                .join("/")}
+                            </Typography>
                           </TableCell>
                         );
                       } else {
@@ -218,10 +234,10 @@ const DataTable = () => {
                               onClick={() => {
                                 dispatch(
                                   getPersonalTasks({
-                                    taskId: row.todoId,
-                                    taskName: row.todoName,
+                                    taskId: row.todo_id,
+                                    taskName: row.todo_name,
                                     taskStatus: row.status,
-                                    dueDate: row.dueDate,
+                                    dueDate: row.deadline,
                                   })
                                 );
                               }}
