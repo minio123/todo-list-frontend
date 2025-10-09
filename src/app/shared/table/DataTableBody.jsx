@@ -31,7 +31,7 @@ const DataTableBody = ({ rows, columns }) => {
             {columns.map((column) => {
               return (
                 <TableCell key={`${column.field}_${i}`}>
-                  <Typography>{row[column.field]}</Typography>
+                  <Typography component="span">{row[column.field]}</Typography>
                 </TableCell>
               );
             })}

@@ -122,6 +122,7 @@ const PersonalTodoIndex = () => {
     {
       field: "statusChip",
       headerName: "Status",
+      componentType: "span",
     },
     {
       field: "deadline",
