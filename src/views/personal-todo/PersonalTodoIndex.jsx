@@ -1,32 +1,31 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 
-// redux
-import { useDispatch, useSelector } from "react-redux";
+// utils
+import { statusColors, statusIcons, rowColors } from "../../app/utils/colors";
 
-//DataTable component
-import DataTable from "./DataTable";
-
-// Modal UI components
-import PersonsalTodoModal from "./PersonalTodoModal";
+//Components
+import ActionButtons from "./ActionButtons";
+import DataTable from "../../app/shared/table/DataTable";
 
 // Middleware
-import { fetchPersonalTasks } from "../../app/middlewares/personalTodoMiddleware";
+import { fetchTodo } from "../../app/middlewares/todoMiddleware";
 
-// MUI Components
+//Redux actions
+import { setSelectedRows } from "../../app/slices/todoSlice";
+
+// MUI components
 
 import {
   Box,
-  Button,
-  TextField,
   useMediaQuery,
   useTheme,
   Typography,
+  Chip,
+  Button,
+  Checkbox,
 } from "@mui/material";
-
-// MUI ICONS
-import { Add, Delete, Check, AccessTime } from "@mui/icons-material";
-import { toggleModal, search } from "../../app/slices/personalTodoSlice";
 
 const PersonalTodoIndex = () => {
   const dispatch = useDispatch();
@@ -34,12 +33,115 @@ const PersonalTodoIndex = () => {
   const locate = location.pathname.split("/");
 
   const theme = useTheme();
-  const isMdUp = useMediaQuery(theme.breakpoints.up("md"));
+
+  const [checkAll, setCheckAll] = useState(false);
 
   // Table redux states
-  const selectedRows = useSelector(
-    (state) => state.personalTodo.dataTable.selectedRows
-  );
+  const { searchTxt, currentPage, itemsPerPage, sortBy, sortDirection } =
+    useSelector((state) => state.dataTable);
+
+  const { rows, selectedRows } = useSelector((state) => state.todo);
+
+  const fetch = async () => {
+    console.log(searchTxt);
+    dispatch(fetchTodo());
+  };
+
+  const handleSelectAll = () => {
+    setCheckAll((prev) => {
+      const next = !prev;
+      if (next) {
+        dispatch(setSelectedRows(rows.map((row) => row.todo_id)));
+      } else {
+        dispatch(setSelectedRows([]));
+      }
+      return next;
+    });
+  };
+
+  const handleRowSelect = (todo_id) => {
+    if (selectedRows.includes(todo_id)) {
+      dispatch(setSelectedRows(selectedRows.filter((id) => id !== todo_id)));
+    } else {
+      dispatch(setSelectedRows([...selectedRows, todo_id]));
+    }
+  };
+
+  const customRow = useMemo(() => {
+    return rows.map((row) => ({
+      ...row,
+      check: (
+        <Checkbox
+          color="primary"
+          checked={selectedRows.includes(row.todo_id)}
+          onChange={() => handleRowSelect(row.todo_id)}
+        />
+      ),
+      statusChip: (
+        <Chip
+          variant="outlined"
+          label={row.status === "DueToday" ? "Due Today" : row.status}
+          color={statusColors[row.status]}
+          icon={statusIcons[row.status]}
+          size="small"
+          sx={{
+            fontWeight: "bold",
+            textTransform: "capitalize",
+            backgroundColor: rowColors[row.status],
+          }}
+        />
+      ),
+      actions: (
+        <Button
+          variant="contained"
+          color="primary"
+          size="small"
+          onClick={() => console.log("Test click")}
+        >
+          Edit
+        </Button>
+      ),
+    }));
+  }, [rows, selectedRows]);
+
+  // Table columns
+  const columns = [
+    {
+      field: "check",
+      headerName: (
+        <Checkbox color="primary" onClick={() => handleSelectAll()} />
+      ),
+      sortable: false,
+      width: 50,
+    },
+    { field: "todo_id", headerName: "To-do ID", width: 120 },
+    {
+      field: "todo_name",
+      headerName: "To-do name",
+    },
+    {
+      field: "statusChip",
+      headerName: "Status",
+    },
+    {
+      field: "deadline",
+      headerName: "Deadline",
+    },
+    {
+      headerName: "Actions",
+      field: "actions",
+      sortable: false,
+    },
+  ];
+
+  useEffect(() => {
+    fetch();
+  }, [searchTxt, currentPage, itemsPerPage, sortBy, sortDirection]);
+
+  useEffect(() => {
+    if (selectedRows.length > 0) {
+    }
+  }, [selectedRows]);
 
   return (
     <Box mt={2} p={2}>
@@ -48,14 +150,7 @@ const PersonalTodoIndex = () => {
           width: "100%",
         }}
       >
-        <Box
-          mb={2}
-          // sx={{
-          //   display: "flex",
-          //   alignItems: "center",
-          //   justifyContent: "space-between",
-          // }}
-        >
+        <Box mb={2}>
           <Typography
             variant="h5"
             gutterBottom
@@ -67,75 +162,8 @@ const PersonalTodoIndex = () => {
           </Typography>
         </Box>
 
-        <Box
-          sx={{
-            display: "flex",
-            gap: 1,
-            flexWrap: "wrap",
-            width: "100%",
-            marginBottom: "2em",
-          }}
-        >
-          <Button
-            variant="contained"
-            color="primary"
-            sx={{
-              width: isMdUp ? "auto" : "100%",
-            }}
-            onClick={() => {
-              dispatch(
-                toggleModal({
-                  modalState: true,
-                  processType: "add",
-                  confirmationState: null,
-                })
-              );
-            }}
-          >
-            Add Todo
-            <Add />
-          </Button>
+        {/* <ActionButtons isMdUp={isMdUp} selectedRows={selectedRows} /> */}
 
-          {selectedRows.length > 0 ? (
-            <>
-              <Button
-                variant="contained"
-                color="success"
-                sx={{
-                  width: isMdUp ? "auto" : "100%",
-                }}
-                onClick={() => {}}
-              >
-                Mark as Done &nbsp;
-                <Check />
-              </Button>
-              <Button
-                variant="contained"
-                color="warning"
-                sx={{
-                  width: isMdUp ? "auto" : "100%",
-                }}
-                onClick={() => {}}
-              >
-                Mark as Pending &nbsp;
-                <AccessTime />
-              </Button>
-              <Button
-                variant="contained"
-                color="error"
-                sx={{
-                  width: isMdUp ? "auto" : "100%",
-                }}
-                onClick={() => {}}
-              >
-                Delete Todo &nbsp;
-                <Delete />
-              </Button>
-            </>
-          ) : (
-            ""
-          )}
-        </Box>
         <Box
           sx={{
             padding: "2em",
@@ -148,26 +176,12 @@ const PersonalTodoIndex = () => {
             bgcolor: theme.palette.background.default,
           }}
         >
-          <Box sx={{ width: isMdUp ? "auto" : "100%" }}>
-            <TextField
-              id="outlined-search"
-              label="Search field"
-              size="small"
-              type="search"
-              sx={{ width: isMdUp ? "400px" : "100%", marginBottom: "15px" }}
-              onChange={(e) => {
-                dispatch(search(e.target.value));
-                dispatch(fetchPersonalTasks());
-              }}
-            />
-          </Box>
-
-          <DataTable />
+          <DataTable columns={columns} rows={customRow} />
         </Box>
       </Box>
 
       {/* MODALS */}
-      <PersonsalTodoModal />
+      {/* <PersonsalTodoModal /> */}
 
       {/* <ConfirmModal /> */}
     </Box>

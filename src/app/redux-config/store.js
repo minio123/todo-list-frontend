@@ -1,17 +1,12 @@
-import { configureStore, combineReducers } from "@reduxjs/toolkit";
+import { configureStore } from "@reduxjs/toolkit";
 // import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage"; // defaults to localStorage for web`
 
 // Importing reducers
-import { dataTableReducer, modalReducer } from "../slices/personalTodoSlice";
+import { todoReducer } from "../slices/todoSlice";
 import snackMessageReducer from "../slices/snackMessageSlice";
 import authUserReducer from "../slices/authSlice";
-
-// Combning reducers
-const personalTodo = combineReducers({
-  dataTable: dataTableReducer,
-  modal: modalReducer,
-});
+import { dataTableReducer } from "../slices/dataTableSlice";
 
 // Redux persist variable
 // const persistConfig = {
@@ -23,9 +18,10 @@ const personalTodo = combineReducers({
 
 export const store = configureStore({
   reducer: {
-    personalTodo,
     snackMessage: snackMessageReducer,
     authUser: authUserReducer,
+    dataTable: dataTableReducer,
+    todo: todoReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

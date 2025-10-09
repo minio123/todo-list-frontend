@@ -1,18 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 // MUI COMPONENTS
-import {
-  Modal,
-  Box,
-  Typography,
-  Button,
-  TextField,
-  MenuItem,
-  Fade,
-  Backdrop,
-  useTheme,
-  useMediaQuery,
-} from "@mui/material";
+import { Modal, Box, Button, useTheme, useMediaQuery } from "@mui/material";
 import { HelpOutlineOutlined, Report } from "@mui/icons-material";
 const ConfirmModal = () => {
   const theme = useTheme();
