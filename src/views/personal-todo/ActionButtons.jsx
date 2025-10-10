@@ -12,8 +12,7 @@ import { Box, Button } from "@mui/material";
 // MUI ICONS
 import { Add, Delete, Check, AccessTime } from "@mui/icons-material";
 
-const ActionButtons = ({ isMdUp, selectedRows }) => {
-  const dispatch = useDispatch();
+const ActionButtons = ({ isMdUp, selectedRows, handleOpen }) => {
   return (
     <>
       <Box
@@ -32,13 +31,7 @@ const ActionButtons = ({ isMdUp, selectedRows }) => {
             width: isMdUp ? "auto" : "100%",
           }}
           onClick={() => {
-            dispatch(
-              toggleModal({
-                modalState: true,
-                processType: "add",
-                confirmationState: null,
-              })
-            );
+            handleOpen();
           }}
         >
           Add Todo

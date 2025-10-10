@@ -2,12 +2,20 @@ import { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 
+// For datetime picker
+import dayjs, { Dayjs } from "dayjs";
+import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
+import { renderTimeViewClock } from "@mui/x-date-pickers/timeViewRenderers";
 // utils
 import { statusColors, statusIcons, rowColors } from "../../app/utils/colors";
 
 //Components
 import ActionButtons from "./ActionButtons";
 import DataTable from "../../app/shared/table/DataTable";
+import FormModal from "../../app/shared/modal/FormModal";
 
 // Middleware
 import { fetchTodo } from "../../app/middlewares/todoMiddleware";
@@ -16,15 +24,19 @@ import { fetchTodo } from "../../app/middlewares/todoMiddleware";
 import { setSelectedRows } from "../../app/slices/todoSlice";
 
 // MUI components
-
 import {
   Box,
-  useMediaQuery,
   useTheme,
   Typography,
   Chip,
   Button,
   Checkbox,
+  Grid,
+  TextField,
+  FormControl,
+  Select,
+  InputLabel,
+  MenuItem,
 } from "@mui/material";
 
 const PersonalTodoIndex = () => {
@@ -33,8 +45,11 @@ const PersonalTodoIndex = () => {
   const locate = location.pathname.split("/");
 
   const theme = useTheme();
+  const isMdUp = theme.breakpoints.up("md");
 
   const [checkAll, setCheckAll] = useState(false);
+  const [deadline, setDeadline] = useState();
+  const [status, setStatus] = useState("Pending");
 
   // Table redux states
   const { searchTxt, currentPage, itemsPerPage, sortBy, sortDirection } =
@@ -43,7 +58,6 @@ const PersonalTodoIndex = () => {
   const { rows, selectedRows } = useSelector((state) => state.todo);
 
   const fetch = async () => {
-    console.log(searchTxt);
     dispatch(fetchTodo());
   };
 
@@ -135,6 +149,10 @@ const PersonalTodoIndex = () => {
     },
   ];
 
+  const [isOpen, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
   useEffect(() => {
     fetch();
   }, [searchTxt, currentPage, itemsPerPage, sortBy, sortDirection]);
@@ -163,7 +181,11 @@ const PersonalTodoIndex = () => {
           </Typography>
         </Box>
 
-        {/* <ActionButtons isMdUp={isMdUp} selectedRows={selectedRows} /> */}
+        <ActionButtons
+          isMdUp={isMdUp}
+          selectedRows={selectedRows}
+          handleOpen={handleOpen}
+        />
 
         <Box
           sx={{
@@ -182,7 +204,76 @@ const PersonalTodoIndex = () => {
       </Box>
 
       {/* MODALS */}
-      {/* <PersonsalTodoModal /> */}
+      <FormModal
+        modalHeader="Add Todo"
+        open={isOpen}
+        onClose={handleClose}
+        size="xs"
+      >
+        <Grid container spacing={2}>
+          <Grid size={{ xs: 12, md: 4 }}>
+            <TextField
+              required
+              id="outlined-required"
+              label="Todo Name (Required)"
+              placeholder="Enter your task"
+              size="small"
+              fullWidth
+            />
+          </Grid>
+          <Grid size={{ xs: 12, md: 4 }}>
+            <FormControl fullWidth size="small">
+              <InputLabel id="select-task-status">Status (Required)</InputLabel>
+              <Select
+                labelId="select-task-status"
+                id="task-status"
+                label="Status (Required)"
+                value={status}
+                onChange={(e) => setStatus(e.target.value)}
+              >
+                <MenuItem value={"Pending"}>Pending</MenuItem>
+                <MenuItem value={"Done"}>Done</MenuItem>
+                <MenuItem value={"DueToday"}>Due Today</MenuItem>
+                <MenuItem value={"Overdue"}>Overdue</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+          <Grid size={{ xs: 12, md: 4 }}>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DateTimePicker
+                label="Deadline"
+                onChange={(newDeadline) => {
+                  setDeadline(dayjs(newDeadline));
+                }}
+                viewRenderers={{
+                  hours: renderTimeViewClock,
+                  minutes: renderTimeViewClock,
+                  seconds: renderTimeViewClock,
+                }}
+                slotProps={{
+                  textField: {
+                    size: "small",
+                    fullWidth: true,
+                    sx: {
+                      width: "100%",
+                      maxWidth: "100%",
+                      "& .MuiInputBase-root": {
+                        height: 36,
+                        fontSize: "0.875rem",
+                        alignItems: "center",
+                      },
+                      "& input": {
+                        paddingTop: "8px",
+                        paddingBottom: "8px",
+                      },
+                    },
+                  },
+                }}
+              />
+            </LocalizationProvider>
+          </Grid>
+        </Grid>
+      </FormModal>
 
       {/* <ConfirmModal /> */}
     </Box>
