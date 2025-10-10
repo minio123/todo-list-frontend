@@ -1,0 +1,148 @@
+import { useEffect, useState } from "react";
+
+import { Outlet, useNavigate } from "react-router-dom";
+
+// Navbar and Sidebar Components
+import Navbar from "./views/layouts/Navbar.jsx";
+import Sidebar from "./views/layouts/Sidebar.jsx";
+
+import { useDispatch, useSelector } from "react-redux";
+
+import Login from "./views/auth/Login.jsx";
+
+// snackMessage component
+import SnackMessage from "./app/utils/snackMessage.jsx";
+
+// MUI Components
+import { Box, Fab, createTheme, ThemeProvider } from "@mui/material";
+
+//MUI Icons
+import { DarkMode, LightMode } from "@mui/icons-material";
+
+// API
+import api from "./app/config/api.js";
+
+// Redux actions
+import { loggedUser } from "./app/slices/authSlice.js";
+
+function App() {
+  // Navigate
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { isLoggedIn } = useSelector((state) => state.authUser);
+
+  const [mode, setMode] = useState("light");
+  const [open, setOpen] = useState(false);
+  const darkTheme = createTheme({
+    typography: {
+      fontFamily: "Poppins, sans-serif",
+      // fontFamily: "Inter, Roboto, Helvetica, Arial, sans-serif",
+      fontSize: 11, // Default font size
+    },
+    palette: {
+      mode,
+      ...(mode === "light"
+        ? {
+            // Light mode colors
+            primary: { main: "#1976d2" },
+            secondary: { main: "#9c27b0" },
+            background: {
+              default: "#ffffff",
+              paper: "#f5f5f5",
+              floating: "#1e1e20",
+            },
+            text: {
+              primary: "#333333",
+              secondary: "#333333",
+              dark: "#ececf1",
+            },
+          }
+        : {
+            // Dark mode colors
+            primary: { main: "#90caf9" },
+            secondary: { main: "#f48fb1" },
+            background: {
+              default: "#1e1e20",
+              paper: "#2a2a2e",
+              card: "#1e1e20",
+            },
+            text: {
+              primary: "#ececf1",
+              secondary: "#aaaaaa",
+            },
+          }),
+    },
+  });
+
+  const checkToken = () => {
+    const response = api
+      .post("auth/refresh")
+      .then((res) => {
+        dispatch(loggedUser(res.data.user));
+      })
+      .catch((err) => {
+        localStorage.removeItem("isLoggedIn");
+        navigate("/login");
+      });
+    return response;
+  };
+
+  useEffect(() => {
+    checkToken();
+  }, []);
+
+  return (
+    <>
+      {localStorage.getItem("isLoggedIn") ? (
+        <ThemeProvider theme={darkTheme}>
+          <Box
+            bgcolor={"background.paper"}
+            color={"text.primary"}
+            sx={{ position: "relative", minHeight: "100vh" }}
+          >
+            <Navbar setOpen={setOpen} open={open} />
+            <Box
+              spacing={{ xs: 0, md: 2 }}
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                gap: "1em",
+              }}
+            >
+              <Sidebar setOpen={setOpen} open={open} />
+              <Box
+                sx={{
+                  pr: { xs: "1em", md: "1em" },
+                  pl: { xs: "1em", md: "0" },
+                  width: { xs: "100%", md: "65%" },
+                }}
+              >
+                <Outlet />
+              </Box>
+            </Box>
+            <Fab
+              sx={{
+                position: "fixed",
+                right: { xs: "2%", md: "15px" },
+                bottom: { xs: "3%", md: "15px" },
+                bgcolor: mode == "light" ? "#2a2a2e" : "#ffffff",
+                color: mode == "light" ? "#ffffff" : "#2a2a2e",
+                "&:hover": {
+                  bgcolor: mode == "light" ? "#1e1e20" : "#a5a5a5",
+                },
+              }}
+              onClick={(e) => setMode(mode === "light" ? "dark" : "light")}
+            >
+              {mode == "light" ? <DarkMode /> : <LightMode />}
+            </Fab>
+          </Box>
+          <SnackMessage />
+        </ThemeProvider>
+      ) : (
+        <Login />
+      )}
+    </>
+  );
+}
+
+export default App;
