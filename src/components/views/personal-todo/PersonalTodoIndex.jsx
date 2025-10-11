@@ -4,24 +4,31 @@ import { useLocation } from "react-router-dom";
 
 // For datetime picker
 import dayjs, { Dayjs } from "dayjs";
-import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import { renderTimeViewClock } from "@mui/x-date-pickers/timeViewRenderers";
+
 // utils
-import { statusColors, statusIcons, rowColors } from "../../app/utils/colors";
+import {
+  statusColors,
+  statusIcons,
+  rowColors,
+} from "../../../app/utils/colors";
 
 //Components
 import ActionButtons from "./ActionButtons";
-import DataTable from "../../app/shared/table/DataTable";
-import FormModal from "../../app/shared/modal/FormModal";
+import DataTable from "../../shared/table/DataTable";
+import FormModal from "../../shared/modal/FormModal.jsx";
 
 // Middleware
-import { fetchTodo } from "../../app/middlewares/todoMiddleware";
+import { fetchTodo, createTodo } from "../../../app/middlewares/todoMiddleware";
 
 //Redux actions
-import { setSelectedRows } from "../../app/slices/todoSlice";
+import { setSelectedRows } from "../../../app/slices/todoSlice";
+
+// Snackbar
+import { showMessage } from "../../../app/slices/snackMessageSlice.js";
 
 // MUI components
 import {
@@ -47,16 +54,48 @@ const PersonalTodoIndex = () => {
   const theme = useTheme();
   const isMdUp = theme.breakpoints.up("md");
 
-  const [checkAll, setCheckAll] = useState(false);
-  const [deadline, setDeadline] = useState();
+  // Add modal form state
+  const [todoName, setTodoName] = useState("");
+  const [deadline, setDeadline] = useState(null);
   const [status, setStatus] = useState("Pending");
 
-  // Table redux states
+  // Datatable columns
+  const columns = [
+    {
+      field: "check",
+      headerName: (
+        <Checkbox color="primary" onClick={() => handleSelectAll()} />
+      ),
+      sortable: false,
+      width: 50,
+    },
+    { field: "todo_id", headerName: "To-do ID", width: 120 },
+    {
+      field: "todo_name",
+      headerName: "To-do name",
+    },
+    {
+      field: "statusChip",
+      headerName: "Status",
+      componentType: "span",
+    },
+    {
+      field: "deadline",
+      headerName: "Deadline",
+    },
+    {
+      headerName: "Actions",
+      field: "actions",
+      sortable: false,
+    },
+  ];
+
+  // Datatable redux states
   const { searchTxt, currentPage, itemsPerPage, sortBy, sortDirection } =
     useSelector((state) => state.dataTable);
-
   const { rows, selectedRows } = useSelector((state) => state.todo);
 
+  // Datatable functions
   const fetch = async () => {
     dispatch(fetchTodo());
   };
@@ -81,6 +120,7 @@ const PersonalTodoIndex = () => {
     }
   };
 
+  const [checkAll, setCheckAll] = useState(false);
   const customRow = useMemo(() => {
     return rows.map((row) => ({
       ...row,
@@ -118,41 +158,41 @@ const PersonalTodoIndex = () => {
     }));
   }, [rows, selectedRows]);
 
-  // Table columns
-  const columns = [
-    {
-      field: "check",
-      headerName: (
-        <Checkbox color="primary" onClick={() => handleSelectAll()} />
-      ),
-      sortable: false,
-      width: 50,
-    },
-    { field: "todo_id", headerName: "To-do ID", width: 120 },
-    {
-      field: "todo_name",
-      headerName: "To-do name",
-    },
-    {
-      field: "statusChip",
-      headerName: "Status",
-      componentType: "span",
-    },
-    {
-      field: "deadline",
-      headerName: "Deadline",
-    },
-    {
-      headerName: "Actions",
-      field: "actions",
-      sortable: false,
-    },
-  ];
-
+  // Modals state and hooks
   const [isOpen, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const handleClose = () => {
+    setOpen(false);
+    setTodoName("");
+    setDeadline(null);
+    setStatus("Pending");
+  };
 
+  // Modal functions
+  const saveTodo = async () => {
+    const newTodo = {
+      todoName: todoName,
+      deadline: dayjs(deadline).format("YYYY-MM-DD HH:mm:ss"),
+      status: status,
+      category: "personal",
+    };
+    const response = await dispatch(createTodo(newTodo));
+    console.log(response.payload);
+    const res_status = response.payload;
+
+    if (res_status.status === "success") {
+      fetch();
+      handleClose();
+    }
+    dispatch(
+      showMessage({
+        open: true,
+        severity: res_status.status,
+        message: res_status.message,
+      })
+    );
+  };
+  // UseEffects
   useEffect(() => {
     fetch();
   }, [searchTxt, currentPage, itemsPerPage, sortBy, sortDirection]);
@@ -219,6 +259,8 @@ const PersonalTodoIndex = () => {
               placeholder="Enter your task"
               size="small"
               fullWidth
+              value={todoName}
+              onChange={(e) => setTodoName(e.target.value)}
             />
           </Grid>
           <Grid size={{ xs: 12, md: 4 }}>
@@ -241,9 +283,11 @@ const PersonalTodoIndex = () => {
           <Grid size={{ xs: 12, md: 4 }}>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DateTimePicker
-                label="Deadline"
+                id="outlined-required"
+                label="Deadline (Required)"
+                value={deadline}
                 onChange={(newDeadline) => {
-                  setDeadline(dayjs(newDeadline));
+                  setDeadline(newDeadline);
                 }}
                 viewRenderers={{
                   hours: renderTimeViewClock,
@@ -271,6 +315,33 @@ const PersonalTodoIndex = () => {
                 }}
               />
             </LocalizationProvider>
+          </Grid>
+          <Grid
+            container
+            size={{ md: 12 }}
+            justifyContent="flex-end"
+            spacing={2}
+          >
+            <Button
+              onClick={saveTodo}
+              sx={{
+                width: "100px",
+              }}
+              variant="contained"
+              color="primary"
+            >
+              Save
+            </Button>
+            <Button
+              sx={{
+                width: "100px",
+              }}
+              variant="contained"
+              color="error"
+              onClick={handleClose}
+            >
+              Cancel
+            </Button>
           </Grid>
         </Grid>
       </FormModal>

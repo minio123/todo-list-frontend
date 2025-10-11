@@ -15,10 +15,10 @@ import {
 } from "react-router-dom";
 
 // VIEW COMPONENTS
-import Dashboard from "./views/dashboards/Dashboard.jsx";
-import PersonalTodoIndex from "./views/personal-todo/PersonalTodoIndex.jsx";
-import WorkTodoIndex from "./views/work-todo/WorkTodoIndex.jsx";
-import Login from "./views/auth/Login.jsx";
+import Dashboard from "./components/views/dashboards/Dashboard.jsx";
+import PersonalTodoIndex from "./components/views/personal-todo/PersonalTodoIndex.jsx";
+import WorkTodoIndex from "./components/views/work-todo/WorkTodoIndex.jsx";
+import Login from "./components/views/auth/Login.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(

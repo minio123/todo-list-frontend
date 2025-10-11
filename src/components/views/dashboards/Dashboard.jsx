@@ -1,9 +1,6 @@
 import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
 
-// Middleware
-import { authUser } from "../../app/middlewares/authMiddleware";
-
 // MUI COMPONENTS
 import { Box, Grid, Typography, styled } from "@mui/material";
 
@@ -59,20 +56,6 @@ ChartJS.register(
 );
 
 const Dashboard = () => {
-  const dispatch = useDispatch();
-  //useEffect
-  // useEffect(() => {
-  //   const params = new URLSearchParams(window.location.search);
-  //   const token = params.get("token");
-
-  //   if (token) {
-  //     localStorage.setItem("token");
-  //     localStorage.setItem("isLoggedIn",)
-  //     const payload = JSON.parse(atob(token.split(".")[1]));
-  //     dispatch(authUser({ payload }));
-  //   }
-  // }, []);
-
   const options = {
     responsive: true,
     maintainAspectRatio: true,

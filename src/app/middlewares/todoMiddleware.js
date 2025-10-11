@@ -25,16 +25,16 @@ const fetchTodo = createAsyncThunk(
 );
 
 // Simulate an API call to create tasks
-// const createPersonalTasks = createAsyncThunk(
-//   "personalTodo/createTasks",
-//   async (taskData, { rejectWithValue }) => {
-//     try {
-//       const response = await api.createTasks(taskData);
-//       return response; // Return the created task data for simplicity
-//     } catch (error) {
-//       return rejectWithValue(error.message);
-//     }
-//   }
-// );
+const createTodo = createAsyncThunk(
+  "todo/createTodo",
+  async (todoData, { rejectWithValue }) => {
+    try {
+      const response = await api.createTodo(todoData);
+      return response; // Return the created task data for simplicity
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
 
-export { fetchTodo };
+export { fetchTodo, createTodo };

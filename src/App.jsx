@@ -3,12 +3,12 @@ import { useEffect, useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 
 // Navbar and Sidebar Components
-import Navbar from "./views/layouts/Navbar.jsx";
-import Sidebar from "./views/layouts/Sidebar.jsx";
+import Navbar from "./components/template/Navbar.jsx";
+import Sidebar from "./components/template/Sidebar.jsx";
 
 import { useDispatch, useSelector } from "react-redux";
 
-import Login from "./views/auth/Login.jsx";
+import Login from "./components/views/auth/Login.jsx";
 
 // snackMessage component
 import SnackMessage from "./app/utils/snackMessage.jsx";

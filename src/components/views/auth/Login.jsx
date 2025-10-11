@@ -2,7 +2,7 @@ import { use, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 
-import api from "../../app/config/api.js";
+import api from "../../../app/config/api.js";
 
 // Google auth
 import { GoogleOAuthProvider, useGoogleLogin } from "@react-oauth/google";
@@ -22,12 +22,12 @@ import {
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 // Logo
-import logo from "../../assets/logo/TodoListLogo.png";
-import googleLogo from "../../assets/logo/google.png";
+import logo from "../../../assets/logo/TodoListLogo.png";
+import googleLogo from "../../../assets/logo/google.png";
 
 // Redux slices
-import { showMessage } from "../../app/slices/snackMessageSlice";
-import { loggedUser } from "../../app/slices/authSlice.js";
+import { showMessage } from "../../../app/slices/snackMessageSlice";
+import { loggedUser } from "../../../app/slices/authSlice.js";
 
 const Login = () => {
   const [errorLogin, setErrorLogin] = useState("");

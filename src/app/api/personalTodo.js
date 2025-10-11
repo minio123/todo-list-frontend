@@ -25,15 +25,31 @@ const fetchTodo = async (params) => {
 
   const data = api_response.data;
 
-  const response = data.filter((todo) => {
-    if (
-      todo.todo_id.includes(params.search) ||
-      todo.todo_name.includes(params.search)
-    ) {
-      return todo;
-    }
-  });
-  return response;
+  // const response = data.filter((todo) => {
+  //   if (
+  //     todo.todo_id.includes(params.search) ||
+  //     todo.todo_name.includes(params.search)
+  //   ) {
+  //     return todo;
+  //   }
+  // });
+  return data;
 };
 
-export { fetchTodo };
+const createTodo = async (params) => {
+  const api_response = await api
+    .post("/todo/create", params, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => {
+      return error.response.data;
+    });
+  return api_response;
+};
+
+export { fetchTodo, createTodo };

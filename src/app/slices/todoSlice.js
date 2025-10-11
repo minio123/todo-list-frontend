@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import dayjs from "dayjs";
 
 // Importing thunks and api calls
-import { fetchTodo } from "../middlewares/todoMiddleware";
+import { fetchTodo, createTodo } from "../middlewares/todoMiddleware";
 
 // Data Table Slice
 const todoSlice = createSlice({
@@ -10,6 +10,7 @@ const todoSlice = createSlice({
   initialState: {
     rows: [],
     selectedRows: [],
+    response: [],
   },
   reducers: {
     setSelectedRows: (state, action) => {
@@ -28,11 +29,21 @@ const todoSlice = createSlice({
       state.loading = false;
       state.error = action.payload;
     });
+    builder.addCase(createTodo.pending, (state, action) => {
+      state.loading = true;
+    });
+    builder.addCase(createTodo.fulfilled, (state, action) => {
+      state.loading = false;
+      state.response = action.payload;
+    });
+    builder.addCase(createTodo.rejected, (state, action) => {
+      state.loading = false;
+    });
   },
 });
 
 // Exporting actions
-export const { setSelectedRows } = todoSlice.actions;
+export const { setSelectedRows, response } = todoSlice.actions;
 
 // Exporting reducers
 export const todoReducer = todoSlice.reducer;

@@ -13,7 +13,7 @@ import {
   createTheme,
 } from "@mui/material";
 
-import { sort } from "../../slices/dataTableSlice";
+import { sort } from "../../../app/slices/dataTableSlice";
 
 const DataTableHeader = ({ columns }) => {
   const dispatch = useDispatch();
