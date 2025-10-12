@@ -37,4 +37,16 @@ const createTodo = createAsyncThunk(
   }
 );
 
-export { fetchTodo, createTodo };
+const updateTodo = createAsyncThunk(
+  "todo/updateTodo",
+  async (todoData, { rejectWithValue }) => {
+    try {
+      const response = await api.updateTodo(todoData);
+      return response;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export { fetchTodo, createTodo, updateTodo };

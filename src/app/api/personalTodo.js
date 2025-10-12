@@ -23,8 +23,6 @@ const fetchTodo = async (params) => {
       return error;
     });
 
-  const data = api_response.data;
-
   // const response = data.filter((todo) => {
   //   if (
   //     todo.todo_id.includes(params.search) ||
@@ -33,7 +31,7 @@ const fetchTodo = async (params) => {
   //     return todo;
   //   }
   // });
-  return data;
+  return api_response;
 };
 
 const createTodo = async (params) => {
@@ -52,4 +50,21 @@ const createTodo = async (params) => {
   return api_response;
 };
 
-export { fetchTodo, createTodo };
+const updateTodo = async (params) => {
+  const api_response = await api
+    .put(`/todo/update/${params.todo_id}`, params, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => {
+      return error.response.data;
+    });
+
+  return api_response;
+};
+
+export { fetchTodo, createTodo, updateTodo };

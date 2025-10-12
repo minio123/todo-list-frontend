@@ -2,7 +2,11 @@ import { createSlice } from "@reduxjs/toolkit";
 import dayjs from "dayjs";
 
 // Importing thunks and api calls
-import { fetchTodo, createTodo } from "../middlewares/todoMiddleware";
+import {
+  fetchTodo,
+  createTodo,
+  updateTodo,
+} from "../middlewares/todoMiddleware";
 
 // Data Table Slice
 const todoSlice = createSlice({
@@ -11,6 +15,7 @@ const todoSlice = createSlice({
     rows: [],
     selectedRows: [],
     response: [],
+    totalRows: 0,
   },
   reducers: {
     setSelectedRows: (state, action) => {
@@ -23,7 +28,8 @@ const todoSlice = createSlice({
     });
     builder.addCase(fetchTodo.fulfilled, (state, action) => {
       state.loading = false;
-      state.rows = action.payload;
+      state.rows = action.payload.data;
+      state.totalRows = action.payload.totalItems;
     });
     builder.addCase(fetchTodo.rejected, (state, action) => {
       state.loading = false;
@@ -37,6 +43,16 @@ const todoSlice = createSlice({
       state.response = action.payload;
     });
     builder.addCase(createTodo.rejected, (state, action) => {
+      state.loading = false;
+    });
+    builder.addCase(updateTodo.pending, (state, action) => {
+      state.loading = true;
+    });
+    builder.addCase(updateTodo.fulfilled, (state, action) => {
+      state.loading = false;
+      state.response = action.payload;
+    });
+    builder.addCase(updateTodo.rejected, (state, action) => {
       state.loading = false;
     });
   },

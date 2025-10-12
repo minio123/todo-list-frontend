@@ -8,11 +8,12 @@ import { useMediaQuery, useTheme, Table, TextField, Box } from "@mui/material";
 // Custom datatable components
 import DataTableHeader from "./DataTableHeader";
 import DataTableBody from "./DataTableBody";
+import DataTablePaging from "./DataTablePaging";
 
 // Redux actions
-import { search, setLoad } from "../../../app/slices/dataTableSlice";
+import { search } from "../../../app/slices/dataTableSlice";
 
-const DataTable = ({ columns, rows }) => {
+const DataTable = ({ columns, rows, totalRows }) => {
   const theme = useTheme();
   const isMdUp = useMediaQuery(theme.breakpoints.up("md"));
   const dispatch = useDispatch();
@@ -43,6 +44,7 @@ const DataTable = ({ columns, rows }) => {
         <DataTableHeader columns={columns} />
         <DataTableBody rows={rows} columns={columns} />
       </Table>
+      <DataTablePaging totalRows={totalRows} />
     </>
   );
 };

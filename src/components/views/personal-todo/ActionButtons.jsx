@@ -12,7 +12,8 @@ import { Box, Button } from "@mui/material";
 // MUI ICONS
 import { Add, Delete, Check, AccessTime } from "@mui/icons-material";
 
-const ActionButtons = ({ isMdUp, selectedRows, handleOpen }) => {
+const ActionButtons = ({ isMdUp, selectedRows, handlers }) => {
+  const { handleOpen, setOpType } = handlers;
   return (
     <>
       <Box
@@ -32,6 +33,7 @@ const ActionButtons = ({ isMdUp, selectedRows, handleOpen }) => {
           }}
           onClick={() => {
             handleOpen();
+            setOpType("create");
           }}
         >
           Add Todo

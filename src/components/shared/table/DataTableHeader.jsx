@@ -60,7 +60,7 @@ const DataTableHeader = ({ columns }) => {
           >
             <Typography
               style={{
-                fontWeight: 500,
+                fontWeight: 600,
                 textTransform: "uppercase",
               }}
             >

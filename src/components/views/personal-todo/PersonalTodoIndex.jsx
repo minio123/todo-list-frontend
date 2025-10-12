@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { use, useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 
@@ -22,7 +22,11 @@ import DataTable from "../../shared/table/DataTable";
 import FormModal from "../../shared/modal/FormModal.jsx";
 
 // Middleware
-import { fetchTodo, createTodo } from "../../../app/middlewares/todoMiddleware";
+import {
+  fetchTodo,
+  createTodo,
+  updateTodo,
+} from "../../../app/middlewares/todoMiddleware";
 
 //Redux actions
 import { setSelectedRows } from "../../../app/slices/todoSlice";
@@ -58,6 +62,7 @@ const PersonalTodoIndex = () => {
   const [todoName, setTodoName] = useState("");
   const [deadline, setDeadline] = useState(null);
   const [status, setStatus] = useState("Pending");
+  const [todoId, setTodoId] = useState("");
 
   // Datatable columns
   const columns = [
@@ -93,7 +98,7 @@ const PersonalTodoIndex = () => {
   // Datatable redux states
   const { searchTxt, currentPage, itemsPerPage, sortBy, sortDirection } =
     useSelector((state) => state.dataTable);
-  const { rows, selectedRows } = useSelector((state) => state.todo);
+  const { rows, selectedRows, totalRows } = useSelector((state) => state.todo);
 
   // Datatable functions
   const fetch = async () => {
@@ -150,7 +155,7 @@ const PersonalTodoIndex = () => {
           variant="contained"
           color="primary"
           size="small"
-          onClick={() => console.log("Test click")}
+          onClick={() => fillModal(row)}
         >
           Edit
         </Button>
@@ -159,6 +164,7 @@ const PersonalTodoIndex = () => {
   }, [rows, selectedRows]);
 
   // Modals state and hooks
+  const [opType, setOpType] = useState("");
   const [isOpen, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
@@ -166,19 +172,28 @@ const PersonalTodoIndex = () => {
     setTodoName("");
     setDeadline(null);
     setStatus("Pending");
+    setOpType("");
+    setTodoId("");
   };
 
   // Modal functions
-  const saveTodo = async () => {
-    const newTodo = {
+  const saveChanges = async () => {
+    let response = "";
+    let res_status = "";
+    const todoData = {
       todoName: todoName,
       deadline: dayjs(deadline).format("YYYY-MM-DD HH:mm:ss"),
       status: status,
       category: "personal",
     };
-    const response = await dispatch(createTodo(newTodo));
-    console.log(response.payload);
-    const res_status = response.payload;
+    if (opType === "update") {
+      todoData.todo_id = todoId;
+      response = await dispatch(updateTodo(todoData));
+      res_status = response.payload;
+    } else {
+      response = await dispatch(createTodo(todoData));
+      res_status = response.payload;
+    }
 
     if (res_status.status === "success") {
       fetch();
@@ -192,6 +207,16 @@ const PersonalTodoIndex = () => {
       })
     );
   };
+
+  const fillModal = (data) => {
+    setOpType("update");
+    setTodoName(data.todo_name);
+    setDeadline(dayjs(data.deadline));
+    setStatus(data.status);
+    setTodoId(data.id);
+    setOpen(true);
+  };
+
   // UseEffects
   useEffect(() => {
     fetch();
@@ -224,7 +249,7 @@ const PersonalTodoIndex = () => {
         <ActionButtons
           isMdUp={isMdUp}
           selectedRows={selectedRows}
-          handleOpen={handleOpen}
+          handlers={{ handleOpen, setOpType }}
         />
 
         <Box
@@ -239,7 +264,7 @@ const PersonalTodoIndex = () => {
             bgcolor: theme.palette.background.default,
           }}
         >
-          <DataTable columns={columns} rows={customRow} />
+          <DataTable columns={columns} rows={customRow} totalRows={totalRows} />
         </Box>
       </Box>
 
@@ -323,7 +348,7 @@ const PersonalTodoIndex = () => {
             spacing={2}
           >
             <Button
-              onClick={saveTodo}
+              onClick={saveChanges}
               sx={{
                 width: "100px",
               }}
@@ -345,8 +370,6 @@ const PersonalTodoIndex = () => {
           </Grid>
         </Grid>
       </FormModal>
-
-      {/* <ConfirmModal /> */}
     </Box>
   );
 };
