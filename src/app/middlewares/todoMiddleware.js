@@ -49,4 +49,28 @@ const updateTodo = createAsyncThunk(
   }
 );
 
-export { fetchTodo, createTodo, updateTodo };
+const updateStatus = createAsyncThunk(
+  "todo/updateStatus",
+  async (todoData, { rejectWithValue }) => {
+    try {
+      const response = await api.updateStatus(todoData);
+      return response;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+const deleteTodo = createAsyncThunk(
+  "todo/deleteTodo",
+  async (todoData, { rejectWithValue }) => {
+    try {
+      const response = await api.deleteTodo(todoData);
+      return response;
+    } catch (error) {
+      return rejectWithValue;
+    }
+  }
+);
+
+export { fetchTodo, createTodo, updateTodo, updateStatus, deleteTodo };

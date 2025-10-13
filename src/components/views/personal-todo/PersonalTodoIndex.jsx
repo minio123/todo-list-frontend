@@ -26,6 +26,8 @@ import {
   fetchTodo,
   createTodo,
   updateTodo,
+  updateStatus,
+  deleteTodo,
 } from "../../../app/middlewares/todoMiddleware";
 
 //Redux actions
@@ -61,7 +63,7 @@ const PersonalTodoIndex = () => {
   // Add modal form state
   const [todoName, setTodoName] = useState("");
   const [deadline, setDeadline] = useState(null);
-  const [status, setStatus] = useState("Pending");
+  const [status, setStatus] = useState("pending");
   const [todoId, setTodoId] = useState("");
 
   // Datatable columns
@@ -74,7 +76,6 @@ const PersonalTodoIndex = () => {
       sortable: false,
       width: 50,
     },
-    { field: "todo_id", headerName: "To-do ID", width: 120 },
     {
       field: "todo_name",
       headerName: "To-do name",
@@ -109,7 +110,7 @@ const PersonalTodoIndex = () => {
     setCheckAll((prev) => {
       const next = !prev;
       if (next) {
-        dispatch(setSelectedRows(rows.map((row) => row.todo_id)));
+        dispatch(setSelectedRows(rows.map((row) => row.id)));
       } else {
         dispatch(setSelectedRows([]));
       }
@@ -132,8 +133,8 @@ const PersonalTodoIndex = () => {
       check: (
         <Checkbox
           color="primary"
-          checked={selectedRows.includes(row.todo_id)}
-          onChange={() => handleRowSelect(row.todo_id)}
+          checked={selectedRows.includes(row.id)}
+          onChange={() => handleRowSelect(row.id)}
         />
       ),
       statusChip: (
@@ -153,7 +154,7 @@ const PersonalTodoIndex = () => {
       actions: (
         <Button
           variant="contained"
-          color="primary"
+          color="info"
           size="small"
           onClick={() => fillModal(row)}
         >
@@ -171,7 +172,7 @@ const PersonalTodoIndex = () => {
     setOpen(false);
     setTodoName("");
     setDeadline(null);
-    setStatus("Pending");
+    setStatus("pending");
     setOpType("");
     setTodoId("");
   };
@@ -217,6 +218,50 @@ const PersonalTodoIndex = () => {
     setOpen(true);
   };
 
+  // Action button functions
+  const handleStatusUpdate = async (status) => {
+    const todoData = {
+      todo_id: selectedRows,
+      status: status,
+    };
+
+    const response = await dispatch(updateStatus(todoData));
+    console.log(response);
+    const res_status = response.payload;
+    if (res_status.status === "success") {
+      dispatch(setSelectedRows([]));
+      setCheckAll(false);
+      fetch();
+    }
+    dispatch(
+      showMessage({
+        open: true,
+        severity: res_status.status,
+        message: res_status.message,
+      })
+    );
+  };
+
+  const handleDelete = async () => {
+    const todoData = {
+      todo_id: selectedRows,
+    };
+    const response = await dispatch(deleteTodo(todoData));
+    const res_status = response.payload;
+    if (res_status.status === "success") {
+      dispatch(setSelectedRows([]));
+      setCheckAll(false);
+      fetch();
+    }
+    dispatch(
+      showMessage({
+        open: true,
+        severity: res_status.status,
+        message: res_status.message,
+      })
+    );
+  };
+
   // UseEffects
   useEffect(() => {
     fetch();
@@ -249,7 +294,7 @@ const PersonalTodoIndex = () => {
         <ActionButtons
           isMdUp={isMdUp}
           selectedRows={selectedRows}
-          handlers={{ handleOpen, setOpType }}
+          handlers={{ handleOpen, setOpType, handleStatusUpdate, handleDelete }}
         />
 
         <Box
@@ -298,10 +343,10 @@ const PersonalTodoIndex = () => {
                 value={status}
                 onChange={(e) => setStatus(e.target.value)}
               >
-                <MenuItem value={"Pending"}>Pending</MenuItem>
-                <MenuItem value={"Done"}>Done</MenuItem>
-                <MenuItem value={"DueToday"}>Due Today</MenuItem>
-                <MenuItem value={"Overdue"}>Overdue</MenuItem>
+                <MenuItem value={"pending"}>Pending</MenuItem>
+                <MenuItem value={"done"}>Done</MenuItem>
+                <MenuItem value={"dueToday"}>Due Today</MenuItem>
+                <MenuItem value={"overdue"}>Overdue</MenuItem>
               </Select>
             </FormControl>
           </Grid>

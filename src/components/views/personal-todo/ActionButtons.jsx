@@ -13,7 +13,7 @@ import { Box, Button } from "@mui/material";
 import { Add, Delete, Check, AccessTime } from "@mui/icons-material";
 
 const ActionButtons = ({ isMdUp, selectedRows, handlers }) => {
-  const { handleOpen, setOpType } = handlers;
+  const { handleOpen, setOpType, handleStatusUpdate, handleDelete } = handlers;
   return (
     <>
       <Box
@@ -48,7 +48,9 @@ const ActionButtons = ({ isMdUp, selectedRows, handlers }) => {
               sx={{
                 width: isMdUp ? "auto" : "100%",
               }}
-              onClick={() => {}}
+              onClick={() => {
+                handleStatusUpdate("done");
+              }}
             >
               Mark as Done &nbsp;
               <Check />
@@ -59,7 +61,9 @@ const ActionButtons = ({ isMdUp, selectedRows, handlers }) => {
               sx={{
                 width: isMdUp ? "auto" : "100%",
               }}
-              onClick={() => {}}
+              onClick={() => {
+                handleStatusUpdate("pending");
+              }}
             >
               Mark as Pending &nbsp;
               <AccessTime />
@@ -70,7 +74,9 @@ const ActionButtons = ({ isMdUp, selectedRows, handlers }) => {
               sx={{
                 width: isMdUp ? "auto" : "100%",
               }}
-              onClick={() => {}}
+              onClick={() => {
+                handleDelete();
+              }}
             >
               Delete Todo &nbsp;
               <Delete />

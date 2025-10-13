@@ -1,3 +1,4 @@
+import { response } from "../slices/todoSlice";
 import api from "./api";
 
 // src/app/api/personalTodo.js
@@ -67,4 +68,43 @@ const updateTodo = async (params) => {
   return api_response;
 };
 
-export { fetchTodo, createTodo, updateTodo };
+const updateStatus = async (params) => {
+  const api_response = await api
+    .put(`/todo/update-status`, params, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => {
+      return error.response.data;
+    });
+
+  return api_response;
+};
+
+const deleteTodo = async (params) => {
+  console.log(params);
+  const api_response = await api
+    .delete(
+      `/todo/delete`,
+      { data: params },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    )
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => {
+      return error.response.data;
+    });
+
+  return api_response;
+};
+
+export { fetchTodo, createTodo, updateTodo, updateStatus, deleteTodo };

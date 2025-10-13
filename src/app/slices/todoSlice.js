@@ -6,6 +6,8 @@ import {
   fetchTodo,
   createTodo,
   updateTodo,
+  updateStatus,
+  deleteTodo,
 } from "../middlewares/todoMiddleware";
 
 // Data Table Slice
@@ -53,6 +55,26 @@ const todoSlice = createSlice({
       state.response = action.payload;
     });
     builder.addCase(updateTodo.rejected, (state, action) => {
+      state.loading = false;
+    });
+    builder.addCase(updateStatus.pending, (state, action) => {
+      state.loading = true;
+    });
+    builder.addCase(updateStatus.fulfilled, (state, action) => {
+      state.loading = false;
+      state.response = action.payload;
+    });
+    builder.addCase(updateStatus.rejected, (state, action) => {
+      state.loading = false;
+    });
+    builder.addCase(deleteTodo.pending, (state, action) => {
+      state.loading = true;
+    });
+    builder.addCase(deleteTodo.fulfilled, (state, action) => {
+      state.loading = false;
+      state.response = action.payload;
+    });
+    builder.addCase(deleteTodo.rejected, (state, action) => {
       state.loading = false;
     });
   },

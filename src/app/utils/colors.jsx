@@ -8,26 +8,26 @@ import {
 
 // Status colors
 const statusColors = Object.freeze({
-  Done: "success",
-  Pending: "warning",
-  Overdue: "error",
-  DueToday: "secondary",
+  done: "success",
+  pending: "warning",
+  overdue: "error",
+  dueToday: "secondary",
 });
 
 // Status icons
 const statusIcons = Object.freeze({
-  Done: <Check />,
-  Pending: <AccessTime />,
-  Overdue: <Warning />,
-  DueToday: <NotificationsActive />,
+  done: <Check />,
+  pending: <AccessTime />,
+  overdue: <Warning />,
+  dueToday: <NotificationsActive />,
 });
 
 // Row Colors based on status
 const rowColors = Object.freeze({
-  Done: "#d4edda",
-  Pending: "#fff3cd",
-  Overdue: "#f8d7da",
-  DueToday: "#f8dbfdff",
+  done: "#d4edda",
+  pending: "#fff3cd",
+  overdue: "#f8d7da",
+  dueToday: "#f8dbfdff",
 });
 
 export { statusColors, statusIcons, rowColors };
