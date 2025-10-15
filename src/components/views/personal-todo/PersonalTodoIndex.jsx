@@ -19,7 +19,7 @@ import {
 //Components
 import ActionButtons from "./ActionButtons";
 import DataTable from "../../shared/table/DataTable";
-import FormModal from "../../shared/modal/FormModal.jsx";
+import FormModal from "../../shared/modal/FormModal";
 
 // Middleware
 import {
@@ -29,6 +29,9 @@ import {
   updateStatus,
   deleteTodo,
 } from "../../../app/middlewares/todoMiddleware";
+
+// Context
+import { useDialog } from "../../shared/dialog/DialogContext";
 
 //Redux actions
 import { setSelectedRows } from "../../../app/slices/todoSlice";
@@ -53,6 +56,7 @@ import {
 } from "@mui/material";
 
 const PersonalTodoIndex = () => {
+  const dialog = useDialog();
   const dispatch = useDispatch();
   const location = useLocation();
   const locate = location.pathname.split("/");
@@ -168,7 +172,14 @@ const PersonalTodoIndex = () => {
   const [opType, setOpType] = useState("");
   const [isOpen, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
-  const handleClose = () => {
+  const handleClose = async () => {
+    const confirm = await dialog({
+      icon: "info",
+      title: "Are you sure?",
+      message: "This action cannot be undone.",
+      showButton: true,
+    });
+
     setOpen(false);
     setTodoName("");
     setDeadline(null);
@@ -220,13 +231,22 @@ const PersonalTodoIndex = () => {
 
   // Action button functions
   const handleStatusUpdate = async (status) => {
+    const confirm = await dialog({
+      icon: "info",
+      title: "Update Todo(s)",
+      message:
+        "Are you sure you want to update the status of the checked rows?",
+      showButton: true,
+    });
+
+    if (!confirm) return;
+
     const todoData = {
       todo_id: selectedRows,
       status: status,
     };
 
     const response = await dispatch(updateStatus(todoData));
-    console.log(response);
     const res_status = response.payload;
     if (res_status.status === "success") {
       dispatch(setSelectedRows([]));
@@ -243,6 +263,15 @@ const PersonalTodoIndex = () => {
   };
 
   const handleDelete = async () => {
+    const confirm = await dialog({
+      icon: "info",
+      title: "Delete Todo(s)",
+      message:
+        "Are you sure you want to delete the checked rows? This action cannot be undone.",
+      showButton: true,
+    });
+
+    if (!confirm) return;
     const todoData = {
       todo_id: selectedRows,
     };
@@ -415,6 +444,14 @@ const PersonalTodoIndex = () => {
           </Grid>
         </Grid>
       </FormModal>
+
+      {/* {Dialog} */}
+      {/* <ConfirmationDialog
+        icon={""}
+        title={""}
+        text={""}
+        dialogState={dialogState}
+      /> */}
     </Box>
   );
 };

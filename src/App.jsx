@@ -2,12 +2,16 @@ import { useEffect, useState } from "react";
 
 import { Outlet, useNavigate } from "react-router-dom";
 
+// Custom provider
+import DialogProvider from "./components/shared/dialog/DialogProvider";
+
 // Navbar and Sidebar Components
 import Navbar from "./components/template/Navbar.jsx";
 import Sidebar from "./components/template/Sidebar.jsx";
 
 import { useDispatch, useSelector } from "react-redux";
 
+// Components
 import Login from "./components/views/auth/Login.jsx";
 
 // snackMessage component
@@ -95,48 +99,50 @@ function App() {
     <>
       {localStorage.getItem("isLoggedIn") ? (
         <ThemeProvider theme={darkTheme}>
-          <Box
-            bgcolor={"background.paper"}
-            color={"text.primary"}
-            sx={{ position: "relative", minHeight: "100vh" }}
-          >
-            <Navbar setOpen={setOpen} open={open} />
+          <DialogProvider>
             <Box
-              spacing={{ xs: 0, md: 2 }}
-              sx={{
-                display: "flex",
-                justifyContent: "center",
-                gap: "1em",
-              }}
+              bgcolor={"background.paper"}
+              color={"text.primary"}
+              sx={{ position: "relative", minHeight: "100vh" }}
             >
-              <Sidebar setOpen={setOpen} open={open} />
+              <Navbar setOpen={setOpen} open={open} />
               <Box
+                spacing={{ xs: 0, md: 2 }}
                 sx={{
-                  pr: { xs: "1em", md: "1em" },
-                  pl: { xs: "1em", md: "0" },
-                  width: { xs: "100%", md: "65%" },
+                  display: "flex",
+                  justifyContent: "center",
+                  gap: "1em",
                 }}
               >
-                <Outlet />
+                <Sidebar setOpen={setOpen} open={open} />
+                <Box
+                  sx={{
+                    pr: { xs: "1em", md: "1em" },
+                    pl: { xs: "1em", md: "0" },
+                    width: { xs: "100%", md: "65%" },
+                  }}
+                >
+                  <Outlet />
+                </Box>
               </Box>
+              <Fab
+                sx={{
+                  position: "fixed",
+                  right: { xs: "2%", md: "15px" },
+                  bottom: { xs: "3%", md: "15px" },
+                  bgcolor: mode == "light" ? "#2a2a2e" : "#ffffff",
+                  color: mode == "light" ? "#ffffff" : "#2a2a2e",
+                  "&:hover": {
+                    bgcolor: mode == "light" ? "#1e1e20" : "#a5a5a5",
+                  },
+                }}
+                onClick={(e) => setMode(mode === "light" ? "dark" : "light")}
+              >
+                {mode == "light" ? <DarkMode /> : <LightMode />}
+              </Fab>
             </Box>
-            <Fab
-              sx={{
-                position: "fixed",
-                right: { xs: "2%", md: "15px" },
-                bottom: { xs: "3%", md: "15px" },
-                bgcolor: mode == "light" ? "#2a2a2e" : "#ffffff",
-                color: mode == "light" ? "#ffffff" : "#2a2a2e",
-                "&:hover": {
-                  bgcolor: mode == "light" ? "#1e1e20" : "#a5a5a5",
-                },
-              }}
-              onClick={(e) => setMode(mode === "light" ? "dark" : "light")}
-            >
-              {mode == "light" ? <DarkMode /> : <LightMode />}
-            </Fab>
-          </Box>
-          <SnackMessage />
+            <SnackMessage />
+          </DialogProvider>
         </ThemeProvider>
       ) : (
         <Login />
