@@ -179,7 +179,12 @@ const PersonalTodoIndex = () => {
       message: "This action cannot be undone.",
       showButton: true,
     });
+    console.log(confirm);
+    if (!confirm) return;
+    resetModal();
+  };
 
+  const resetModal = () => {
     setOpen(false);
     setTodoName("");
     setDeadline(null);
@@ -209,7 +214,7 @@ const PersonalTodoIndex = () => {
 
     if (res_status.status === "success") {
       fetch();
-      handleClose();
+      resetModal();
     }
     dispatch(
       showMessage({

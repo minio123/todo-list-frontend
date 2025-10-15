@@ -15,19 +15,10 @@ const DataTableBody = ({ rows, columns }) => {
 
   // Table body rows function
   const tableRows = () => {
-    // if (load) {
-    //   return (
-    //     <TableRow key={1}>
-    //       <TableCell colSpan={columns.length + 1}>
-    //         <Skeleton />
-    //       </TableCell>
-    //     </TableRow>
-    //   );
-    // }
     if (rows.length > 0) {
       const tableRows = rows.map((row, i) => {
         return (
-          <TableRow key={row.todo_id} hover>
+          <TableRow key={i} hover>
             {columns.map((column) => {
               return (
                 <TableCell key={`${column.field}_${i}`}>

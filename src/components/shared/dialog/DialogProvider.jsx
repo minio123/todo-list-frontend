@@ -10,6 +10,7 @@ import {
   DialogActions,
   Button,
   Typography,
+  Fade,
 } from "@mui/material";
 
 //MUI icons
@@ -40,7 +41,11 @@ const DialogProvider = ({ children }) => {
   return (
     <DialogContext.Provider value={{ openDialog }}>
       {children}
-      <Dialog open={!!options} onClose={() => handleClose(false)}>
+      <Dialog
+        open={!!options}
+        onClose={() => handleClose(false)}
+        TransitionComponent={Fade}
+      >
         <DialogTitle
           sx={{
             display: "flex",
@@ -59,19 +64,10 @@ const DialogProvider = ({ children }) => {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button
-            onClick={() => handleClose(false)}
-            // variant="contained"
-            // color="error"
-          >
+          <Button onClick={() => handleClose(false)}>
             {options?.cancelText || "Cancel"}
           </Button>
-          <Button
-            onClick={() => handleClose(true)}
-            // variant="contained"
-            // color="success"
-            autoFocus
-          >
+          <Button onClick={() => handleClose(true)} autoFocus>
             {options?.confirmText || "Confirm"}
           </Button>
         </DialogActions>
