@@ -10,7 +10,6 @@ import {
   TableCell,
   TableSortLabel,
   Typography,
-  createTheme,
 } from "@mui/material";
 
 import { sort } from "../../../app/slices/dataTableSlice";

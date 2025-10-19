@@ -6,9 +6,9 @@ import api from "./api";
 
 // Simulate an API call to fetch tasks
 const fetchTodo = async (params) => {
-  let url_params = `?search=${params.search}&page=${params.page}&sort_by=${params.sortBy}&sort=${params.sortDirection}&limit=${params.itemsPerPage}&category=personal`;
+  let url_params = `?search=${params.search}&page=${params.page}&sort_by=${params.sortBy}&sort=${params.sortDirection}&limit=${params.itemsPerPage}&category=${params.category}`;
   if (params.search == "") {
-    url_params = `?page=${params.page}&sort_by=${params.sortBy}&sort=${params.sortDirection}&limit=${params.itemsPerPage}&category=personal`;
+    url_params = `?page=${params.page}&sort_by=${params.sortBy}&sort=${params.sortDirection}&limit=${params.itemsPerPage}&category=${params.category}`;
   }
 
   const api_response = await api

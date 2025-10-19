@@ -16,8 +16,7 @@ import {
 
 // VIEW COMPONENTS
 import Dashboard from "./components/views/dashboards/Dashboard.jsx";
-import PersonalTodoIndex from "./components/views/personal-todo/PersonalTodoIndex.jsx";
-import WorkTodoIndex from "./components/views/work-todo/WorkTodoIndex.jsx";
+import TodoIndex from "./components/views/todo/TodoIndex.jsx";
 import Login from "./components/views/auth/Login.jsx";
 
 const router = createBrowserRouter(
@@ -26,8 +25,8 @@ const router = createBrowserRouter(
       <Route path="/login" element={<Login />} />
       <Route path="/" element={<App />}>
         <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/todo-list/personal" element={<PersonalTodoIndex />} />
-        <Route path="/todo-list/work" element={<WorkTodoIndex />} />
+        <Route path="/todo-list/personal" element={<TodoIndex />} />
+        <Route path="/todo-list/work" element={<TodoIndex />} />
       </Route>
     </>
   )

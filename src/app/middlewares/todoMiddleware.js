@@ -8,12 +8,14 @@ const fetchTodo = createAsyncThunk(
   "todo/fetchTodo",
   async (_, { getState, rejectWithValue }) => {
     const state = getState().dataTable;
+    const category = getState().todo.category;
     const params = {
       search: state.searchTxt,
       page: state.currentPage,
       itemsPerPage: state.itemsPerPage,
       sortBy: state.sortBy,
       sortDirection: state.sortDirection,
+      category: category,
     };
     try {
       const response = await api.fetchTodo(params);

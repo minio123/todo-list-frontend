@@ -18,10 +18,14 @@ const todoSlice = createSlice({
     selectedRows: [],
     response: [],
     totalRows: 0,
+    category: "",
   },
   reducers: {
     setSelectedRows: (state, action) => {
       state.selectedRows = action.payload;
+    },
+    setCategory: (state, action) => {
+      state.category = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -81,7 +85,7 @@ const todoSlice = createSlice({
 });
 
 // Exporting actions
-export const { setSelectedRows, response } = todoSlice.actions;
+export const { setSelectedRows, response, setCategory } = todoSlice.actions;
 
 // Exporting reducers
 export const todoReducer = todoSlice.reducer;

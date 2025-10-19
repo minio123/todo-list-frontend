@@ -1,6 +1,6 @@
 import { use, useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 // For datetime picker
 import dayjs, { Dayjs } from "dayjs";
@@ -14,12 +14,12 @@ import {
   statusColors,
   statusIcons,
   rowColors,
-} from "../../../app/utils/colors";
+} from "../../../app/utils/colors.jsx";
 
 //Components
-import ActionButtons from "./ActionButtons";
-import DataTable from "../../shared/table/DataTable";
-import FormModal from "../../shared/modal/FormModal";
+import ActionButtons from "./ActionButtons.jsx";
+import DataTable from "../../shared/table/DataTable.jsx";
+import FormModal from "../../shared/modal/FormModal.jsx";
 
 // Middleware
 import {
@@ -28,13 +28,13 @@ import {
   updateTodo,
   updateStatus,
   deleteTodo,
-} from "../../../app/middlewares/todoMiddleware";
+} from "../../../app/middlewares/todoMiddleware.js";
 
 // Context
-import { useDialog } from "../../shared/dialog/DialogContext";
+import { useDialog } from "../../shared/dialog/DialogContext.jsx";
 
 //Redux actions
-import { setSelectedRows } from "../../../app/slices/todoSlice";
+import { setSelectedRows, setCategory } from "../../../app/slices/todoSlice.js";
 
 // Snackbar
 import { showMessage } from "../../../app/slices/snackMessageSlice.js";
@@ -55,11 +55,13 @@ import {
   MenuItem,
 } from "@mui/material";
 
-const PersonalTodoIndex = () => {
+const TodoIndex = () => {
   const dialog = useDialog();
   const dispatch = useDispatch();
   const location = useLocation();
   const locate = location.pathname.split("/");
+  const category = locate[locate.length - 1];
+  const navigate = useNavigate();
 
   const theme = useTheme();
   const isMdUp = theme.breakpoints.up("md");
@@ -107,7 +109,8 @@ const PersonalTodoIndex = () => {
 
   // Datatable functions
   const fetch = async () => {
-    dispatch(fetchTodo());
+    await dispatch(setCategory(category));
+    await dispatch(fetchTodo());
   };
 
   const handleSelectAll = () => {
@@ -201,7 +204,7 @@ const PersonalTodoIndex = () => {
       todoName: todoName,
       deadline: dayjs(deadline).format("YYYY-MM-DD HH:mm:ss"),
       status: status,
-      category: "personal",
+      category: category,
     };
     if (opType === "update") {
       todoData.todo_id = todoId;
@@ -299,7 +302,7 @@ const PersonalTodoIndex = () => {
   // UseEffects
   useEffect(() => {
     fetch();
-  }, [searchTxt, currentPage, itemsPerPage, sortBy, sortDirection]);
+  }, [searchTxt, currentPage, itemsPerPage, sortBy, sortDirection, navigate]);
 
   useEffect(() => {
     if (selectedRows.length > 0) {
@@ -461,4 +464,4 @@ const PersonalTodoIndex = () => {
   );
 };
 
-export default PersonalTodoIndex;
+export default TodoIndex;
