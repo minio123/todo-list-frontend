@@ -130,6 +130,7 @@ const Sidebar = ({ setOpen, open }) => {
             "& .MuiDrawer-paper": {
               width: drawerWidth,
               bgcolor: theme.palette.background.default,
+              height: "100%",
             },
           }}
         >

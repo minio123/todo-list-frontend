@@ -18,6 +18,7 @@ import {
 import Dashboard from "./components/views/dashboards/Dashboard.jsx";
 import TodoIndex from "./components/views/todo/TodoIndex.jsx";
 import Login from "./components/views/auth/Login.jsx";
+import UserProfile from "./components/views/profile/UserProfile.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -27,6 +28,7 @@ const router = createBrowserRouter(
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/todo-list/personal" element={<TodoIndex />} />
         <Route path="/todo-list/work" element={<TodoIndex />} />
+        <Route path="/my-profile" element={<UserProfile />} />
       </Route>
     </>
   )

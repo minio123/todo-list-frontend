@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import { googleLogout } from "@react-oauth/google";
@@ -135,7 +135,9 @@ const Navbar = ({ setOpen, open }) => {
           id="basic-menu"
           anchorOrigin={{ vertical: "top", horizontal: "right" }}
           sx={{ mt: { xs: "40px", md: "48px" } }}
-          onClose={(e) => setToggle(false)}
+          onClose={(e) => {
+            setToggle(false);
+          }}
           open={toggle}
           slotProps={{
             list: {
@@ -143,7 +145,14 @@ const Navbar = ({ setOpen, open }) => {
             },
           }}
         >
-          <MenuItem onClick={(e) => setToggle(false)}>My Account</MenuItem>
+          <MenuItem
+            onClick={(e) => {
+              setToggle(false);
+              navigate("/my-profile");
+            }}
+          >
+            My Account
+          </MenuItem>
           <MenuItem onClick={(e) => logout()}>Logout</MenuItem>
         </Menu>
       </Toolbar>

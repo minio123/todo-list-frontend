@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet, useNavigate, useLocation } from "react-router-dom";
 
 // Custom provider
 import DialogProvider from "./components/shared/dialog/DialogProvider";
@@ -18,7 +18,13 @@ import Login from "./components/views/auth/Login.jsx";
 import SnackMessage from "./app/utils/snackMessage.jsx";
 
 // MUI Components
-import { Box, Fab, createTheme, ThemeProvider } from "@mui/material";
+import {
+  Box,
+  Fab,
+  createTheme,
+  ThemeProvider,
+  Typography,
+} from "@mui/material";
 
 //MUI Icons
 import { DarkMode, LightMode } from "@mui/icons-material";
@@ -33,6 +39,9 @@ function App() {
   // Navigate
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const location = useLocation();
+  const locate = location.pathname.split("/");
+
   const { isLoggedIn } = useSelector((state) => state.authUser);
 
   const [mode, setMode] = useState("light");
@@ -122,7 +131,44 @@ function App() {
                     width: { xs: "100%", md: "65%" },
                   }}
                 >
-                  <Outlet />
+                  <Box
+                    sx={{
+                      padding: { xs: "0", md: "2em" },
+                      marginTop: { xs: "0", md: "2em" },
+                    }}
+                  >
+                    <Box
+                      sx={{
+                        width: "100%",
+                      }}
+                    >
+                      <Box mb={2}>
+                        <Typography
+                          variant="h5"
+                          gutterBottom
+                          component="div"
+                          sx={{ flexGrow: 1, fontWeight: "600", padding: 1 }}
+                          textTransform={"uppercase"}
+                        >
+                          {locate.join(" > ")}
+                        </Typography>
+                      </Box>
+                      <Box
+                        sx={{
+                          padding: { xs: "1em", md: "2em" },
+                          display: "flex",
+                          flexWrap: "wrap",
+                          justifyContent: "space-between",
+                          gap: 1,
+                          mb: 2,
+                          borderRadius: "15px",
+                          bgcolor: darkTheme.palette.background.default,
+                        }}
+                      >
+                        <Outlet />
+                      </Box>
+                    </Box>
+                  </Box>
                 </Box>
               </Box>
               <Fab

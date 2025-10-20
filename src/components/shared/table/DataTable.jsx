@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import debounce from "lodash.debounce";
 
 // MUI components
-import { useMediaQuery, useTheme, Table, TextField, Box } from "@mui/material";
+import { TableContainer, Table, TextField, Box, Paper } from "@mui/material";
 
 // Custom datatable components
 import DataTableHeader from "./DataTableHeader";
@@ -14,8 +14,6 @@ import DataTablePaging from "./DataTablePaging";
 import { search } from "../../../app/slices/dataTableSlice";
 
 const DataTable = ({ columns, rows, totalRows }) => {
-  const theme = useTheme();
-  const isMdUp = useMediaQuery(theme.breakpoints.up("md"));
   const dispatch = useDispatch();
 
   const debouncedSearch = useMemo(
@@ -28,23 +26,39 @@ const DataTable = ({ columns, rows, totalRows }) => {
 
   return (
     <>
-      <Box sx={{ width: isMdUp ? "auto" : "100%" }}>
+      <Box
+        sx={{
+          width: { xs: "100%", md: "100%" },
+        }}
+      >
         <TextField
           id="outlined-search"
           label="Search field"
           size="small"
           type="search"
-          sx={{ width: isMdUp ? "400px" : "100%", marginBottom: "15px" }}
+          sx={{ width: { xs: "100%", md: "400px" }, marginBottom: "15px" }}
           onChange={(e) => {
             debouncedSearch(e.target.value);
           }}
         />
       </Box>
-      <Table stickyHeader aria-label="sticky table">
-        <DataTableHeader columns={columns} />
-        <DataTableBody rows={rows} columns={columns} />
-      </Table>
-      <DataTablePaging totalRows={totalRows} />
+      <Box
+        sx={{
+          width: "100%",
+          maxWidth: "100%",
+          overflowX: "hidden", // Prevent horizontal overflow
+        }}
+      >
+        <TableContainer
+          sx={{ overflowX: "auto", display: "block", whiteSpace: "nowrap" }}
+        >
+          <Table stickyHeader aria-label="responsive table">
+            <DataTableHeader columns={columns} />
+            <DataTableBody rows={rows} columns={columns} />
+          </Table>
+          <DataTablePaging totalRows={totalRows} />
+        </TableContainer>
+      </Box>
     </>
   );
 };

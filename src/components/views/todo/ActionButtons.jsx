@@ -12,7 +12,7 @@ import { Box, Button } from "@mui/material";
 // MUI ICONS
 import { Add, Delete, Check, AccessTime } from "@mui/icons-material";
 
-const ActionButtons = ({ isMdUp, selectedRows, handlers }) => {
+const ActionButtons = ({ selectedRows, handlers }) => {
   const { handleOpen, setOpType, handleStatusUpdate, handleDelete } = handlers;
   return (
     <>
@@ -29,7 +29,7 @@ const ActionButtons = ({ isMdUp, selectedRows, handlers }) => {
           variant="contained"
           color="primary"
           sx={{
-            width: isMdUp ? "auto" : "100%",
+            width: { xs: "100%", md: "auto" },
           }}
           onClick={() => {
             handleOpen();
@@ -46,7 +46,7 @@ const ActionButtons = ({ isMdUp, selectedRows, handlers }) => {
               variant="contained"
               color="success"
               sx={{
-                width: isMdUp ? "auto" : "100%",
+                width: { xs: "100%", md: "auto" },
               }}
               onClick={() => {
                 handleStatusUpdate("done");
@@ -59,7 +59,7 @@ const ActionButtons = ({ isMdUp, selectedRows, handlers }) => {
               variant="contained"
               color="warning"
               sx={{
-                width: isMdUp ? "auto" : "100%",
+                width: { xs: "100%", md: "auto" },
               }}
               onClick={() => {
                 handleStatusUpdate("pending");
@@ -72,7 +72,7 @@ const ActionButtons = ({ isMdUp, selectedRows, handlers }) => {
               variant="contained"
               color="error"
               sx={{
-                width: isMdUp ? "auto" : "100%",
+                width: { xs: "100%", md: "auto" },
               }}
               onClick={() => {
                 handleDelete();

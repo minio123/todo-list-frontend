@@ -1,14 +1,14 @@
 import { response } from "../slices/todoSlice";
 import api from "./api";
 
-// src/app/api/personalTodo.js
+// src/app/api/todo.js
 // Simulated API services for personal todo tasks
 
 // Simulate an API call to fetch tasks
 const fetchTodo = async (params) => {
-  let url_params = `?search=${params.search}&page=${params.page}&sort_by=${params.sortBy}&sort=${params.sortDirection}&limit=${params.itemsPerPage}&category=${params.category}`;
+  let url_params = `?search=${params.search}&page=${params.page}&sort_by=${params.sortBy}&sort=${params.sortDirection}&limit=${params.itemsPerPage}&category=${params.category}&timezone=${params.timezone}`;
   if (params.search == "") {
-    url_params = `?page=${params.page}&sort_by=${params.sortBy}&sort=${params.sortDirection}&limit=${params.itemsPerPage}&category=${params.category}`;
+    url_params = `?page=${params.page}&sort_by=${params.sortBy}&sort=${params.sortDirection}&limit=${params.itemsPerPage}&category=${params.category}&timezone=${params.timezone}`;
   }
 
   const api_response = await api

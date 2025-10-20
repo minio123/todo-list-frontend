@@ -19,6 +19,7 @@ const todoSlice = createSlice({
     response: [],
     totalRows: 0,
     category: "",
+    currentTimeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
   },
   reducers: {
     setSelectedRows: (state, action) => {

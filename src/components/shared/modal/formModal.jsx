@@ -31,7 +31,7 @@ const FormModal = ({ open, modalHeader, onClose, children, size = "md" }) => {
         sx={{
           bgcolor: theme.palette.background.default,
           padding: 2,
-          width: modalSizes[size],
+          width: { xs: "80%", md: modalSizes[size] },
           borderRadius: "15px",
           zIndex: 1300,
           outline: "none",

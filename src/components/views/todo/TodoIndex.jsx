@@ -1,4 +1,4 @@
-import { use, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 
@@ -43,7 +43,6 @@ import { showMessage } from "../../../app/slices/snackMessageSlice.js";
 import {
   Box,
   useTheme,
-  Typography,
   Chip,
   Button,
   Checkbox,
@@ -53,6 +52,7 @@ import {
   Select,
   InputLabel,
   MenuItem,
+  Container,
 } from "@mui/material";
 
 const TodoIndex = () => {
@@ -62,9 +62,6 @@ const TodoIndex = () => {
   const locate = location.pathname.split("/");
   const category = locate[locate.length - 1];
   const navigate = useNavigate();
-
-  const theme = useTheme();
-  const isMdUp = theme.breakpoints.up("md");
 
   // Add modal form state
   const [todoName, setTodoName] = useState("");
@@ -310,45 +307,12 @@ const TodoIndex = () => {
   }, [selectedRows]);
 
   return (
-    <Box mt={2} p={2}>
-      <Box
-        sx={{
-          width: "100%",
-        }}
-      >
-        <Box mb={2}>
-          <Typography
-            variant="h5"
-            gutterBottom
-            component="div"
-            sx={{ flexGrow: 1, fontWeight: "600", padding: 1 }}
-            textTransform={"uppercase"}
-          >
-            {locate.join(" > ")}
-          </Typography>
-        </Box>
-
-        <ActionButtons
-          isMdUp={isMdUp}
-          selectedRows={selectedRows}
-          handlers={{ handleOpen, setOpType, handleStatusUpdate, handleDelete }}
-        />
-
-        <Box
-          sx={{
-            padding: "2em",
-            display: "flex",
-            flexWrap: "wrap",
-            justifyContent: "space-between",
-            gap: 1,
-            mb: 2,
-            borderRadius: "15px",
-            bgcolor: theme.palette.background.default,
-          }}
-        >
-          <DataTable columns={columns} rows={customRow} totalRows={totalRows} />
-        </Box>
-      </Box>
+    <>
+      <ActionButtons
+        selectedRows={selectedRows}
+        handlers={{ handleOpen, setOpType, handleStatusUpdate, handleDelete }}
+      />
+      <DataTable columns={columns} rows={customRow} totalRows={totalRows} />
 
       {/* MODALS */}
       <FormModal
@@ -357,110 +321,114 @@ const TodoIndex = () => {
         onClose={handleClose}
         size="xs"
       >
-        <Grid container spacing={2}>
-          <Grid size={{ xs: 12, md: 4 }}>
-            <TextField
-              required
-              id="outlined-required"
-              label="Todo Name (Required)"
-              placeholder="Enter your task"
-              size="small"
-              fullWidth
-              value={todoName}
-              onChange={(e) => setTodoName(e.target.value)}
-            />
-          </Grid>
-          <Grid size={{ xs: 12, md: 4 }}>
-            <FormControl fullWidth size="small">
-              <InputLabel id="select-task-status">Status (Required)</InputLabel>
-              <Select
-                labelId="select-task-status"
-                id="task-status"
-                label="Status (Required)"
-                value={status}
-                onChange={(e) => setStatus(e.target.value)}
-              >
-                <MenuItem value={"pending"}>Pending</MenuItem>
-                <MenuItem value={"done"}>Done</MenuItem>
-                <MenuItem value={"dueToday"}>Due Today</MenuItem>
-                <MenuItem value={"overdue"}>Overdue</MenuItem>
-              </Select>
-            </FormControl>
-          </Grid>
-          <Grid size={{ xs: 12, md: 4 }}>
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DateTimePicker
+        <Container
+          sx={{
+            padding: 0,
+          }}
+        >
+          <Grid container spacing={2}>
+            <Grid size={{ xs: 12, md: 4 }}>
+              <TextField
+                required
                 id="outlined-required"
-                label="Deadline (Required)"
-                value={deadline}
-                onChange={(newDeadline) => {
-                  setDeadline(newDeadline);
-                }}
-                viewRenderers={{
-                  hours: renderTimeViewClock,
-                  minutes: renderTimeViewClock,
-                  seconds: renderTimeViewClock,
-                }}
-                slotProps={{
-                  textField: {
-                    size: "small",
-                    fullWidth: true,
-                    sx: {
-                      width: "100%",
-                      maxWidth: "100%",
-                      "& .MuiInputBase-root": {
-                        height: 36,
-                        fontSize: "0.875rem",
-                        alignItems: "center",
-                      },
-                      "& input": {
-                        paddingTop: "8px",
-                        paddingBottom: "8px",
+                label="Todo Name (Required)"
+                placeholder="Enter your task"
+                size="small"
+                fullWidth
+                value={todoName}
+                onChange={(e) => setTodoName(e.target.value)}
+              />
+            </Grid>
+            <Grid size={{ xs: 12, md: 4 }}>
+              <FormControl fullWidth size="small">
+                <InputLabel id="select-task-status">
+                  Status (Required)
+                </InputLabel>
+                <Select
+                  labelId="select-task-status"
+                  id="task-status"
+                  label="Status (Required)"
+                  value={status}
+                  onChange={(e) => setStatus(e.target.value)}
+                >
+                  <MenuItem value={"pending"}>Pending</MenuItem>
+                  <MenuItem value={"done"}>Done</MenuItem>
+                  <MenuItem value={"dueToday"}>Due Today</MenuItem>
+                  <MenuItem value={"overdue"}>Overdue</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid size={{ xs: 12, md: 4 }}>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DateTimePicker
+                  id="outlined-required"
+                  label="Deadline (Required)"
+                  value={deadline}
+                  onChange={(newDeadline) => {
+                    setDeadline(newDeadline);
+                  }}
+                  viewRenderers={{
+                    hours: renderTimeViewClock,
+                    minutes: renderTimeViewClock,
+                    seconds: renderTimeViewClock,
+                  }}
+                  slotProps={{
+                    textField: {
+                      size: "small",
+                      fullWidth: true,
+                      sx: {
+                        width: "100%",
+                        maxWidth: "100%",
+                        "& .MuiInputBase-root": {
+                          height: 36,
+                          fontSize: "0.875rem",
+                          alignItems: "center",
+                        },
+                        "& input": {
+                          paddingTop: "8px",
+                          paddingBottom: "8px",
+                        },
                       },
                     },
-                  },
+                  }}
+                />
+              </LocalizationProvider>
+            </Grid>
+            <Grid size={{ xs: 12, md: 12 }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  gap: 1,
+                  width: "100%",
+                  justifyContent: "flex-end",
                 }}
-              />
-            </LocalizationProvider>
+              >
+                <Button
+                  onClick={saveChanges}
+                  sx={{
+                    width: { xs: "100%", md: "100px" },
+                  }}
+                  variant="contained"
+                  color="primary"
+                >
+                  Save
+                </Button>
+                <Button
+                  sx={{
+                    width: { xs: "100%", md: "100px" },
+                  }}
+                  variant="contained"
+                  color="error"
+                  onClick={handleClose}
+                >
+                  Cancel
+                </Button>
+              </Box>
+            </Grid>
           </Grid>
-          <Grid
-            container
-            size={{ md: 12 }}
-            justifyContent="flex-end"
-            spacing={2}
-          >
-            <Button
-              onClick={saveChanges}
-              sx={{
-                width: "100px",
-              }}
-              variant="contained"
-              color="primary"
-            >
-              Save
-            </Button>
-            <Button
-              sx={{
-                width: "100px",
-              }}
-              variant="contained"
-              color="error"
-              onClick={handleClose}
-            >
-              Cancel
-            </Button>
-          </Grid>
-        </Grid>
+        </Container>
       </FormModal>
-
-      {/* {Dialog} */}
-      {/* <ConfirmationDialog
-        icon={""}
-        title={""}
-        text={""}
-        dialogState={dialogState}
-      /> */}
-    </Box>
+    </>
   );
 };
 

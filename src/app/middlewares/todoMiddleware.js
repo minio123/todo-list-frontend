@@ -1,21 +1,22 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
 //API calls
-import * as api from "../api/personalTodo";
+import * as api from "../api/todo";
 
 // Simulate an API call to fetch tasks
 const fetchTodo = createAsyncThunk(
   "todo/fetchTodo",
   async (_, { getState, rejectWithValue }) => {
     const state = getState().dataTable;
-    const category = getState().todo.category;
+    const todo = getState().todo;
     const params = {
       search: state.searchTxt,
       page: state.currentPage,
       itemsPerPage: state.itemsPerPage,
       sortBy: state.sortBy,
       sortDirection: state.sortDirection,
-      category: category,
+      category: todo.category,
+      timezone: todo.currentTimeZone,
     };
     try {
       const response = await api.fetchTodo(params);

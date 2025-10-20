@@ -12,7 +12,10 @@ const DataTablePaging = ({ totalRows }) => {
 
   return (
     <TablePagination
-      component="div"
+      sx={{
+        width: "100%",
+      }}
+      component="Box"
       count={totalRows} // Total number of rows
       page={currentPage} // Current page index
       rowsPerPage={itemsPerPage} // Number of rows per page
