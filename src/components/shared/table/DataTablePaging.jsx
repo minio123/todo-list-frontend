@@ -15,7 +15,7 @@ const DataTablePaging = ({ totalRows }) => {
       sx={{
         width: "100%",
       }}
-      component="Box"
+      component="span"
       count={totalRows} // Total number of rows
       page={currentPage} // Current page index
       rowsPerPage={itemsPerPage} // Number of rows per page

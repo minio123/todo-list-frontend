@@ -126,14 +126,14 @@ function App() {
                 <Sidebar setOpen={setOpen} open={open} />
                 <Box
                   sx={{
-                    pr: { xs: "1em", md: "1em" },
-                    pl: { xs: "1em", md: "0" },
+                    pr: { xs: "0", md: "1em" },
+                    pl: { xs: "0", md: "0" },
                     width: { xs: "100%", md: "65%" },
                   }}
                 >
                   <Box
                     sx={{
-                      padding: { xs: "0", md: "2em" },
+                      padding: { xs: "1em", md: "2em" },
                       marginTop: { xs: "0", md: "2em" },
                     }}
                   >

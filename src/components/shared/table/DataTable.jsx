@@ -3,7 +3,15 @@ import { useDispatch } from "react-redux";
 import debounce from "lodash.debounce";
 
 // MUI components
-import { TableContainer, Table, TextField, Box, Paper } from "@mui/material";
+import {
+  TableContainer,
+  Table,
+  TextField,
+  Box,
+  Paper,
+  Container,
+  Grid,
+} from "@mui/material";
 
 // Custom datatable components
 import DataTableHeader from "./DataTableHeader";
@@ -46,13 +54,25 @@ const DataTable = ({ columns, rows, totalRows }) => {
         sx={{
           width: "100%",
           maxWidth: "100%",
-          overflowX: "hidden", // Prevent horizontal overflow
+          overflowX: "hidden",
         }}
       >
         <TableContainer
-          sx={{ overflowX: "auto", display: "block", whiteSpace: "nowrap" }}
+          sx={{
+            overflowX: "auto",
+            width: "100%",
+          }}
         >
-          <Table stickyHeader aria-label="responsive table">
+          <Table
+            stickyHeader
+            aria-label="responsive table"
+            sx={{
+              width: "100%",
+              whiteSpace: "nowrap",
+              maxWidth: "100%",
+              minWidth: "100%",
+            }}
+          >
             <DataTableHeader columns={columns} />
             <DataTableBody rows={rows} columns={columns} />
           </Table>
