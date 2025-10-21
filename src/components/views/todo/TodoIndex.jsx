@@ -69,12 +69,27 @@ const TodoIndex = () => {
   const [status, setStatus] = useState("pending");
   const [todoId, setTodoId] = useState("");
 
+  // Datatable redux states
+  const { searchTxt, currentPage, itemsPerPage, sortBy, sortDirection } =
+    useSelector((state) => state.dataTable);
+  const { rows, selectedRows, totalRows } = useSelector((state) => state.todo);
+  const [checkAll, setCheckAll] = useState(false);
+
   // Datatable columns
   const columns = [
     {
       field: "check",
       headerName: (
-        <Checkbox color="primary" onClick={() => handleSelectAll()} />
+        <Checkbox
+          color="primary"
+          indeterminate={
+            selectedRows.length > 0 && selectedRows.length < rows.length
+              ? true
+              : false
+          }
+          onClick={() => handleSelectAll()}
+          checked={checkAll}
+        />
       ),
       sortable: false,
       width: 50,
@@ -98,11 +113,6 @@ const TodoIndex = () => {
       sortable: false,
     },
   ];
-
-  // Datatable redux states
-  const { searchTxt, currentPage, itemsPerPage, sortBy, sortDirection } =
-    useSelector((state) => state.dataTable);
-  const { rows, selectedRows, totalRows } = useSelector((state) => state.todo);
 
   // Datatable functions
   const fetch = async () => {
@@ -128,9 +138,12 @@ const TodoIndex = () => {
     } else {
       dispatch(setSelectedRows([...selectedRows, todo_id]));
     }
+
+    if (selectedRows.length === rows.length - 1) {
+      setCheckAll(true);
+    }
   };
 
-  const [checkAll, setCheckAll] = useState(false);
   const customRow = useMemo(() => {
     return rows.map((row) => ({
       ...row,
@@ -179,7 +192,6 @@ const TodoIndex = () => {
       message: "This action cannot be undone.",
       showButton: true,
     });
-    console.log(confirm);
     if (!confirm) return;
     resetModal();
   };

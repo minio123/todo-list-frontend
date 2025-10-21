@@ -78,18 +78,20 @@ const UserProfile = () => {
                     component="label" // Change to label
                     sx={{
                       position: "absolute",
-                      bottom: 30,
-                      right: 0,
                       bgcolor: "background.paper",
                       boxShadow: "0px 2px 8px 0px rgba(99, 99, 99, 0.2) ",
-                      width: { xs: "30px", md: "50px" },
-                      height: { xs: "30px", md: "50px" },
-                      "&:hover": {
-                        bgcolor: "background.paper",
-                      },
+                      width: "100%",
+                      height: "100%",
                     }}
                   >
-                    <CameraAlt />
+                    <CameraAlt
+                      sx={{
+                        opacity: 1,
+                        width: { xs: "20px", md: "40px" },
+                        height: { xs: "20px", md: "40px" },
+                        color: "white",
+                      }}
+                    />
                     <input
                       type="file"
                       accept="image/*"

@@ -174,12 +174,17 @@ function App() {
               <Fab
                 sx={{
                   position: "fixed",
-                  right: { xs: "2%", md: "15px" },
-                  bottom: { xs: "3%", md: "15px" },
+                  right: { xs: "2%", md: "3%" },
+                  bottom: { xs: "3%", md: "5%" },
                   bgcolor: mode == "light" ? "#2a2a2e" : "#ffffff",
                   color: mode == "light" ? "#ffffff" : "#2a2a2e",
+                  opacity: 0.2,
+                  width: { xs: "50px", md: "70px" },
+                  height: { xs: "50px", md: "70px" },
                   "&:hover": {
                     bgcolor: mode == "light" ? "#1e1e20" : "#a5a5a5",
+                    opacity: 1,
+                    transition: "all 0.3s ease-in-out",
                   },
                 }}
                 onClick={(e) => setMode(mode === "light" ? "dark" : "light")}
