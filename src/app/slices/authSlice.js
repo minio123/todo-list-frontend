@@ -1,12 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+import { authUser, updateUser } from "../middlewares/authMiddleware";
+
 const authUserSlice = createSlice({
   name: "authUser",
   initialState: {
     isLoggedIn: false,
     response: [],
     user: [],
-    accessToken: null,
+    userData: [],
   },
   reducers: {
     loggedUser: (state, action) => {
@@ -18,6 +20,14 @@ const authUserSlice = createSlice({
       state.response = [];
       state.user = [];
     },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(updateUser.fulfilled, (state, action) => {
+      state.response = action.payload;
+    });
+    builder.addCase(updateUser.rejected, (state, action) => {
+      state.response = action.payload;
+    });
   },
 });
 

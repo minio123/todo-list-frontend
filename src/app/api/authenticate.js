@@ -1,3 +1,5 @@
+import api from "./api";
+
 // src/app/api/auth.js
 // Simulated API services for login, logout, register and change password
 
@@ -22,4 +24,21 @@ const register = async (params) => {};
 // Simulate API call for changing password
 const changePassword = async (params) => {};
 
-export { login, register, changePassword };
+const updateProfile = async (params) => {
+  const api_response = await api
+    .put("/user/update-profile", params, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => {
+      return error.response.data;
+    });
+
+  return api_response;
+};
+
+export { login, register, changePassword, updateProfile };

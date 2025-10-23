@@ -1,6 +1,9 @@
 import { use, useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
+// Components
+import UserProfileForm from "./UserProfileForm.jsx";
+
 // MUI components
 import {
   Avatar,
@@ -19,7 +22,8 @@ import { CameraAlt } from "@mui/icons-material";
 const UserProfile = () => {
   const dispatch = useDispatch();
 
-  const { user, isLoggedIn } = useSelector((state) => state.authUser);
+  const { user } = useSelector((state) => state.authUser);
+  const [openForm, setOpenForm] = useState(false);
 
   return (
     <Container
@@ -107,28 +111,42 @@ const UserProfile = () => {
                 </Box>
               )}
             </Box>
-            <Box>
-              <Typography
-                sx={{
-                  fontWeight: 600,
-                  fontSize: { xs: "1.2rem", md: "2rem" },
-                }}
-              >
-                {user.name}
-              </Typography>
-              <Typography
-                sx={{
-                  fontSize: { xs: ".9rem", md: "1rem" },
-                }}
-              >
-                {user.email}
-              </Typography>
-            </Box>
+            {!openForm && (
+              <Box>
+                <Typography
+                  sx={{
+                    fontWeight: 600,
+                    fontSize: { xs: "1.2rem", md: "2rem" },
+                  }}
+                >
+                  {user.name}
+                </Typography>
+                <Typography
+                  sx={{
+                    fontSize: { xs: ".9rem", md: "1rem" },
+                  }}
+                >
+                  {user.email}
+                </Typography>
+              </Box>
+            )}
           </Box>
           {user.login_provider !== "google" && (
-            <Button variant="outlined" component="label" fullWidth>
-              Update Profile
-            </Button>
+            <>
+              {!openForm && (
+                <Button
+                  variant="contained"
+                  component="label"
+                  fullWidth
+                  onClick={() => setOpenForm(true)}
+                >
+                  Update Profile
+                </Button>
+              )}
+              {openForm && (
+                <UserProfileForm setOpenForm={setOpenForm} user={user} />
+              )}
+            </>
           )}
         </Grid>
       </Grid>

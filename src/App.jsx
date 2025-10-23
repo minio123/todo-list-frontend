@@ -153,20 +153,24 @@ function App() {
                           {locate.join(" > ")}
                         </Typography>
                       </Box>
-                      <Box
-                        sx={{
-                          padding: { xs: "1em", md: "2em" },
-                          display: "flex",
-                          flexWrap: "wrap",
-                          justifyContent: "space-between",
-                          gap: 1,
-                          mb: 2,
-                          borderRadius: "15px",
-                          bgcolor: darkTheme.palette.background.default,
-                        }}
-                      >
+                      {location.pathname === "/dashboard" ? (
                         <Outlet />
-                      </Box>
+                      ) : (
+                        <Box
+                          sx={{
+                            padding: { xs: "1em", md: "2em" },
+                            display: "flex",
+                            flexWrap: "wrap",
+                            justifyContent: "space-between",
+                            gap: 1,
+                            mb: 2,
+                            borderRadius: "15px",
+                            bgcolor: darkTheme.palette.background.default,
+                          }}
+                        >
+                          <Outlet />
+                        </Box>
+                      )}
                     </Box>
                   </Box>
                 </Box>

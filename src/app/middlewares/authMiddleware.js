@@ -13,4 +13,16 @@ const authUser = createAsyncThunk(
   }
 );
 
-export { authUser };
+const updateUser = createAsyncThunk(
+  "auth/updateProfile",
+  async (params, { rejectWithValue }) => {
+    try {
+      const response = await api.updateProfile(params);
+      return response;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export { authUser, updateUser };

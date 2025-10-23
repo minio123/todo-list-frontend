@@ -24,14 +24,6 @@ const fetchTodo = async (params) => {
       return error;
     });
 
-  // const response = data.filter((todo) => {
-  //   if (
-  //     todo.todo_id.includes(params.search) ||
-  //     todo.todo_name.includes(params.search)
-  //   ) {
-  //     return todo;
-  //   }
-  // });
   return api_response;
 };
 
