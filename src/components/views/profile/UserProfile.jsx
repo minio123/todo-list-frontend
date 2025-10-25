@@ -82,7 +82,7 @@ const UserProfile = () => {
                     component="label" // Change to label
                     sx={{
                       position: "absolute",
-                      bgcolor: "background.paper",
+                      bgcolor: "background.default",
                       boxShadow: "0px 2px 8px 0px rgba(99, 99, 99, 0.2) ",
                       width: "100%",
                       height: "100%",

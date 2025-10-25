@@ -49,7 +49,6 @@ function App() {
   const darkTheme = createTheme({
     typography: {
       fontFamily: "Poppins, sans-serif",
-      // fontFamily: "Inter, Roboto, Helvetica, Arial, sans-serif",
       fontSize: 11, // Default font size
     },
     palette: {
@@ -63,6 +62,7 @@ function App() {
               default: "#ffffff",
               paper: "#f5f5f5",
               floating: "#1e1e20",
+              card: "#ffffff",
             },
             text: {
               primary: "#333333",
@@ -77,7 +77,7 @@ function App() {
             background: {
               default: "#1e1e20",
               paper: "#2a2a2e",
-              card: "#1e1e20",
+              card: "#2a2a2e",
             },
             text: {
               primary: "#ececf1",
@@ -128,7 +128,7 @@ function App() {
                   sx={{
                     pr: { xs: "0", md: "1em" },
                     pl: { xs: "0", md: "0" },
-                    width: { xs: "100%", md: "65%" },
+                    width: { xs: "100%", md: "83%" },
                   }}
                 >
                   <Box
